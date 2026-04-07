@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Explore {{ category.name|title }} | QSell India{% endblock %}
+
+{% block extra_css %}
+<style>
+    .registry-card {
+        background: #ffffff;
+        border: 1px solid #f1f5f9;
+        border-radius: 32px;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    }
+    .registry-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 40px 80px -15px rgba(15, 23, 42, 0.12);
+        border-color: rgba(99, 102, 241, 0.2);
+    }
+    .registry-text-gradient {
+        background: var(--brand-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .registry-badge {
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 800;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="max-w-7xl mx-auto px-6 py-10 lg:py-16">
+    <!-- Header -->
+    <div class="mb-12 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div class="flex items-center gap-4 text-[10px] font-black text-indigo-500 uppercase tracking-[0.4em]">
+            <a href="{% url 'home' %}" class="hover:text-slate-950 transition-colors">Marketplace</a>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-30 text-slate-400"></i>
+            <span class="text-slate-400">{{ category.name }} Marketplace</span>
+        </div>
+        <div class="space-y-6 max-w-4xl">
+            <h1 class="text-5xl lg:text-7xl font-black text-slate-950 tracking-tighter uppercase font-outfit leading-none">
+                {{ category.name }} <span class="registry-text-gradient italic">Marketplace.</span>
+            </h1>
+            <p class="text-slate-500 font-medium max-w-2xl text-base lg:text-lg leading-relaxed opacity-70">
+                Explore our collection of verified products in the {{ category.name }} category. Every ad is checked for quality.
+            </p>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+        {% for product in products %}
+        <div class="registry-card group overflow-hidden">
+            <a href="{% url 'product_detail' product.id %}" class="block">
+                <!-- Image Container -->
+                <div class="aspect-square overflow-hidden relative bg-slate-50">
+                    {% if product.images.first %}
+                        <img src="{{ product.images.first.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center text-slate-200">
+                            <i data-lucide="image" class="w-16 h-16 opacity-30"></i>
+                        </div>
+                    {% endif %}
+
+                    <!-- Condition Badge -->
+                    <div class="absolute top-5 left-5 flex flex-col gap-2">
+                        <span class="bg-white/90 backdrop-blur px-4 py-2 text-[9px] font-black uppercase tracking-widest text-slate-900 rounded-xl shadow-lg border border-slate-100">
+                            {{ product.condition }}
+                        </span>
+                        <span class="bg-indigo-600 px-4 py-2 text-[9px] font-black uppercase tracking-widest text-white rounded-xl shadow-lg border border-indigo-500 w-fit">
+                            {{ product.year }}
+                        </span>
+                    </div>
+
+                    {% if product.is_boosted %}
+                    <div class="absolute top-5 right-5 h-10 w-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-2xl shadow-indigo-600/30">
+                        <i data-lucide="zap" class="w-5 h-5 text-white fill-current"></i>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Product Info -->
+                <div class="p-8 space-y-6">
+                    <div class="flex items-center gap-2 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-indigo-500/50"></i>
+                        <span>{{ product.location|truncatechars:12 }}</span>
+                    </div>
+                    
+                    <h3 class="font-bold text-slate-900 text-lg line-clamp-1 group-hover:text-indigo-600 transition-colors tracking-tight uppercase">{{ product.title }}</h3>
+                    
+                    <div class="flex items-end justify-between pt-6 border-t border-slate-50">
+                        <p class="text-2xl font-black text-slate-950 italic tracking-tighter">₹{{ product.price }}</p>
+                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">{{ product.created_at|timesince }}</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <!-- Empty State -->
+        <div class="col-span-full py-24 text-center space-y-12 animate-in fade-in zoom-in-95 duration-700">
+            <div class="w-32 h-32 bg-indigo-50 text-indigo-500 rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl rotate-12 group hover:rotate-0 transition-transform">
+                <i data-lucide="package-search" class="w-16 h-16"></i>
+            </div>
+            <div class="space-y-6 max-w-sm mx-auto">
+                <h3 class="text-4xl font-black text-slate-900 tracking-tighter uppercase font-outfit">No Ads Found</h3>
+                <p class="text-slate-500 font-medium leading-relaxed opacity-70">There are no products listed in this category yet. Be the first to post an ad.</p>
+            </div>
+            <div class="pt-6">
+                <a href="{% url 'add_product' %}" class="btn-premium py-6 px-14 group">
+                    <i data-lucide="plus-circle" class="w-5 h-5 group-hover:rotate-90 transition-transform duration-500"></i>
+                    <span>Post Your Ad</span>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

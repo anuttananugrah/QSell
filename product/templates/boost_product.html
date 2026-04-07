@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boost Your Ad | QSell</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen text-slate-900">
+    <div class="max-w-4xl mx-auto py-12 px-4 flex flex-col items-center">
+        <!-- Back Button -->
+        <div class="w-full mb-8">
+            <a href="{% url 'my_ads' %}"
+                class="inline-flex items-center space-x-2 text-slate-400 hover:text-blue-600 font-bold transition-all group">
+                <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+                <span class="text-xs uppercase tracking-widest">Back to Manager</span>
+            </a>
+        </div>
+
+        <div
+            class="w-full bg-white rounded-[3rem] border border-slate-200 shadow-2xl overflow-hidden flex flex-col md:flex-row">
+            <!-- Left Side: Product Preview -->
+            <div class="md:w-1/2 p-12 bg-slate-950 text-white flex flex-col justify-center">
+                <div class="mb-8">
+                    <span
+                        class="px-4 py-1.5 bg-blue-600 text-[10px] font-black uppercase tracking-[0.2em] rounded-full">Boost
+                        Preview</span>
+                </div>
+                <h1 class="text-4xl font-black tracking-tight mb-4 leading-[1.1]">Skyrocket your <span
+                        class="text-blue-500">Sales</span> in minutes.</h1>
+                <p class="text-slate-400 font-medium mb-12">Boosting your ad puts it at the very top of our marketplace
+                    for a full month, ensuring maximum eyes on your item.</p>
+
+                <div class="space-y-6">
+                    <div class="flex items-start space-x-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 border border-blue-500/20">
+                            <i data-lucide="zap" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Top Placement</h3>
+                            <p class="text-xs text-slate-500">Stay at the top of Home and Search pages.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 border border-blue-500/20">
+                            <i data-lucide="eye" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">3x More Views</h3>
+                            <p class="text-xs text-slate-500">Our statistics show boosted ads sell 70% faster.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Payment Logic -->
+            <div class="md:w-1/2 p-12 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-2xl bg-slate-50 overflow-hidden border border-slate-200">
+                                {% if product.images.first %}
+                                <img src="{{ product.images.first.image.url }}" class="w-full h-full object-cover">
+                                {% else %}
+                                <div class="w-full h-full flex items-center justify-center text-slate-200">
+                                    <i data-lucide="package" class="w-6 h-6"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h4 class="font-black text-xs uppercase tracking-tight break-words">
+                                    {{ product.title }}
+                                </h4>
+                                <p class="text-[10px] font-bold text-slate-400">ID: #{{ product.id|stringformat:"05d" }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-2xl font-black text-slate-900">₹100</span>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Single Payment</p>
+                        </div>
+                    </div>
+
+                    <div class="h-px bg-slate-100 my-8"></div>
+
+                    <div class="space-y-4">
+                        <div
+                            class="p-4 rounded-2xl border-2 border-blue-600 bg-blue-50 flex items-center justify-between group cursor-pointer">
+                            <div class="flex items-center space-x-4">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white">
+                                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                                </div>
+                                <span class="font-bold text-sm text-blue-900">1 Month Power Boost</span>
+                            </div>
+                            <div class="w-5 h-5 rounded-full border-4 border-blue-600 bg-white"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-12">
+                    <button id="pay-btn" onclick="startPayment()"
+                        class="w-full py-5 bg-blue-600 hover:bg-slate-900 text-white font-black rounded-2xl shadow-2xl shadow-blue-500/30 transition-all uppercase tracking-widest text-xs flex items-center justify-center space-x-3 group">
+                        <span>Process Payment</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                    <p class="text-center text-[10px] text-slate-400 font-medium mt-6">
+                        Secure 256-bit encrypted checkout. No hidden charges.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>lucide.createIcons();</script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        function getCSRFToken() {
+            return document.cookie.split('; ')
+                .find(row => row.startsWith('csrftoken'))
+                ?.split('=')[1];
+        }
+
+        function startPayment() {
+            const btn = document.getElementById("pay-btn");
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+
+            fetch("{% url 'create_boost' product.id %}")
+                .then(res => res.json())
+                .then(data => {
+
+                    if (!data.order_id) {
+                        alert("Something went wrong ❌");
+                        btn.disabled = false;
+                        btn.innerText = "Process Payment";
+                        return;
+                    }
+
+                    var options = {
+                        "key": data.key,
+                        "amount": data.amount,
+                        "currency": "INR",
+                        "name": "QSell",
+                        "description": "Boost Product",
+                        "order_id": data.order_id,
+
+                        "handler": function (response) {
+                            fetch("{% url 'verify_boost' %}", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-CSRFToken": getCSRFToken()
+                                },
+                                body: JSON.stringify(response)
+                            })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.status === "success") {
+                                        alert("🔥 Boost Activated!");
+                                        window.location.href = "{% url 'my_ads' %}";
+                                    } else {
+                                        alert("Payment Failed ❌: " + (data.error || "Unknown error"));
+                                        btn.disabled = false;
+                                        btn.innerText = "Process Payment";
+                                    }
+                                })
+                                .catch(err => {
+                                    alert("Verification Error ❌");
+                                    btn.disabled = false;
+                                    btn.innerText = "Process Payment";
+                                });
+                        },
+
+                        "modal": {
+                            "ondismiss": function () {
+                                alert("Payment cancelled ❌");
+                                btn.disabled = false;
+                                btn.innerText = "Process Payment";
+                            }
+                        },
+
+                        "theme": {
+                            "color": "#2563eb"
+                        }
+                    };
+
+                    var rzp = new Razorpay(options);
+                    rzp.open();
+                })
+                .catch(() => {
+                    alert("Server error ❌");
+                    btn.disabled = false;
+                    btn.innerText = "Process Payment";
+                });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,355 @@
+    {% extends 'base.html' %}
+    {% load static %}
+
+    {% block title %}QSell | India's Premium Marketplace{% endblock %}
+
+    {% block extra_css %}
+    <style>
+        /* Soft Mesh for Hero in Light Mode */
+        .mesh-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.03) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.03) 0%, transparent 40%);
+        }
+
+        .category-icon-bg {
+            width: 60px;
+            height: 60px;
+            background-color: #e2e8f0;
+            border: 1px solid #cbd5e1;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .category-card:hover .category-icon-bg {
+            background-color: #6366f1;
+            color: white;
+            transform: scale(1.1) rotate(6deg);
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.3);
+            border-color: #6366f1;
+        }
+
+        .featured-badge {
+            background: var(--brand-gradient);
+            color: white;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 5px 12px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.3);
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 32px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .product-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 40px 80px -15px rgba(15, 23, 42, 0.12);
+            border-color: rgba(99, 102, 241, 0.1);
+        }
+
+        .security-card {
+            background: white;
+            border: 1px solid #f8fafc;
+            padding: 32px;
+            border-radius: 32px;
+            transition: all 0.4s;
+        }
+
+        .security-card:hover {
+            background: #fcfdfe;
+            box-shadow: 0 30px 60px -10px rgba(15, 23, 42, 0.05);
+        }
+
+        .security-icon-box {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f5f3ff, #fdf4ff);
+            color: #6366f1;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            transition: all 0.4s;
+        }
+
+        .security-card:hover .security-icon-box {
+            background: var(--brand-gradient);
+            color: white;
+            transform: scale(1.1) rotate(-4deg);
+        }
+
+        /* New Luxury Text & Animation */
+        .mesh-move {
+            animation: mesh-float 20s infinite alternate linear;
+        }
+        
+        @keyframes mesh-float {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.1) translate(20px, 10px); }
+            100% { transform: scale(1.2) translate(-10px, -20px); }
+        }
+
+        .glass-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.15;
+            animation: orb-float 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes orb-float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, -50px) scale(1.2); }
+        }
+
+        .shimmer-text {
+            background: linear-gradient(90deg, #0f172a 0%, #6366f1 50%, #0f172a 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 6s infinite linear;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+    </style>
+    {% endblock %}
+
+    {% block content %}
+    <div class="relative overflow-hidden">
+        <div class="mesh-overlay mesh-move"></div>
+        
+        <!-- Hero Section -->
+        <section class="max-w-7xl mx-auto px-6 py-8 lg:py-14 flex flex-col items-center relative gap-8 lg:gap-14">
+            <div class="text-center space-y-10 max-w-6xl relative z-10">
+                <div class="inline-flex items-center gap-3 px-6 py-2 bg-indigo-50 border border-indigo-100 rounded-full animate-in fade-in slide-in-from-top-4 duration-700">
+                    <span class="h-1.5 w-1.5 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_12px_rgba(99,102,241,0.5)]"></span>
+                    <span class="text-[10px] font-black text-indigo-600 uppercase tracking-[0.2em]">Trusted Marketplace &bull; India's Top Ads</span>
+                </div>
+                
+                <h2 class="text-7xl lg:text-[11rem] font-black tracking-tighter leading-[0.8] font-outfit uppercase text-slate-950 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+                    TRADE THE <br><span class="premium-text-gradient italic lowercase tracking-normal">Best.</span>
+                </h2>
+                
+                <p class="text-slate-500 text-lg lg:text-3xl font-medium tracking-tight max-w-2xl mx-auto leading-relaxed opacity-60">
+                    The destination for exceptional pre-owned products. Verified for quality and authenticated value.
+                </p>
+            </div>
+
+            <!-- Decorative Glass Orbs (CSS only, no images) -->
+            <div class="glass-orb w-96 h-96 bg-indigo-400 top-20 left-[-10%]"></div>
+            <div class="glass-orb w-[30rem] h-[30rem] bg-purple-300 bottom-[-10%] right-[-10%] animate-delay-1000"></div>
+
+            <div class="w-full max-w-4xl space-y-12">
+                
+                <form action="{% url 'search' %}" method="GET" class="w-full max-w-4xl bg-white p-4 flex flex-col md:flex-row items-stretch gap-4 shadow-[0_50px_100px_-20px_rgba(15,23,42,0.15)] rounded-[2.5rem] border-2 border-slate-300 focus-within:border-indigo-500 transition-all duration-500">
+                    <div class="flex-grow relative flex items-center px-6 border-b-2 md:border-b-0 md:border-r-2 border-slate-100 gap-6 group/input">
+                        <i data-lucide="search" class="w-7 h-7 text-indigo-600 transition-transform group-focus-within/input:scale-110"></i>
+                        <input type="text" name="q" placeholder="What are you searching for?" class="bg-transparent border-none py-6 text-xl font-black focus:ring-0 text-slate-950 placeholder-slate-400 flex-grow uppercase tracking-tight" required>
+                    </div>
+                    <div class="w-full md:w-72 relative flex items-center px-6 gap-5 group/loc">
+                        <i data-lucide="map-pin" class="w-5 h-5 text-slate-500 group-focus-within/loc:text-indigo-500 transition-colors"></i>
+                        <input type="text" name="location" placeholder="Region" class="bg-transparent border-none py-6 text-base font-black focus:ring-0 text-slate-950 placeholder-slate-400 flex-grow uppercase tracking-tight">
+                    </div>
+                    <button type="submit" class="btn-premium !rounded-[1.8rem] !py-6 md:px-16 !text-[11px] !bg-slate-950 hover:!bg-indigo-600 border-none transition-all duration-700 group shadow-2xl shadow-slate-950/20 active:scale-95">
+                        <span>Search Products</span>
+                        <i data-lucide="sparkles" class="w-4 h-4 group-hover:rotate-12 transition-transform"></i>
+                    </button>
+                </form>
+
+                <div class="flex items-center justify-center gap-8 text-[9px] font-black uppercase tracking-[0.4em] text-slate-400">
+                    <span class="opacity-50">Trending Searches:</span>
+                    <a href="/search?q=macbook" class="hover:text-indigo-600 transition-colors">MacBook</a>
+                    <a href="/search?q=iphone" class="hover:text-indigo-600 transition-colors">iPhone</a>
+                    <a href="/search?q=sony" class="hover:text-indigo-600 transition-colors">Sony</a>
+                </div>
+            </div>
+
+            <!-- Categories Grid -->
+            <div class="w-full grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+                {% for cat_slug, cat_name, icon in category_list|slice:":18" %}
+                <a href="{% url 'category_products' cat_slug %}" class="category-card group">
+                    <div class="flex flex-col items-center">
+                        <div class="category-icon-bg mb-6">
+                            <i data-lucide="{{ icon }}" class="w-8 h-8"></i>
+                        </div>
+                        <span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 group-hover:text-slate-900 transition-colors">{{ cat_name }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Featured Listings -->
+        <section class="max-w-7xl mx-auto px-6 py-10 border-t border-slate-200">
+            <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-8">
+                <div class="space-y-4">
+                    <div class="inline-block px-4 py-1.5 bg-slate-50 text-indigo-600 text-[10px] font-black uppercase tracking-[0.3em] rounded-lg border border-slate-100">
+                        Premium Selections
+                    </div>
+                    <h3 class="text-4xl lg:text-5xl font-black font-outfit uppercase tracking-tighter text-slate-950">Top Ads</h3>
+                </div>
+                <a href="{% url 'search' %}" class="group flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-indigo-600 transition-colors">
+                    View All Ads <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-2 transition-transform"></i>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                {% for product in featured_products %}
+                <div class="product-card group">
+                    <div class="aspect-square relative overflow-hidden bg-slate-50">
+                        <a href="{% url 'product_detail' product.id %}" class="block h-full w-full">
+                            {% if product.images.first %}
+                                <img src="{{ product.images.first.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000">
+                            {% else %}
+                                <div class="w-full h-full flex items-center justify-center text-slate-200">
+                                    <i data-lucide="image" class="w-20 h-20 opacity-20"></i>
+                                </div>
+                            {% endif %}
+                        </a>
+                        
+                        <div class="absolute top-6 left-6 pointer-events-none">
+                            <span class="featured-badge">Top Ad</span>
+                        </div>
+
+                        {% if user.is_authenticated and user != product.seller %}
+                        <a href="{% url 'add_to_wishlist' product.id %}" class="absolute top-6 right-6 h-12 w-12 bg-white/90 backdrop-blur rounded-2xl flex items-center justify-center text-slate-300 hover:text-rose-500 transition-all z-20 shadow-2xl border border-slate-100">
+                            <i data-lucide="heart" class="w-5 h-5"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="p-8 space-y-6">
+                        <div class="flex items-center justify-between">
+                            <p class="text-3xl font-black text-slate-950 italic font-inter tracking-tighter">₹{{ product.price }}</p>
+                            <div class="h-8 w-8 bg-indigo-50 flex items-center justify-center rounded-lg">
+                                <i data-lucide="check-badge" class="w-4 h-4 text-indigo-500"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between gap-4 mb-2">
+                            <span class="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-500">{{ product.category.name }}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 bg-slate-100 text-slate-500 text-[8px] font-bold rounded uppercase">{{ product.year }}</span>
+                                <span class="px-2 py-0.5 bg-emerald-50 text-emerald-600 text-[8px] font-bold rounded uppercase">{{ product.condition|truncatechars:10 }}</span>
+                            </div>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1 uppercase tracking-tight">{{ product.title }}</h4>
+
+                        <div class="pt-8 border-t border-slate-50 flex items-center justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            <span class="flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-300"></i> {{ product.location|truncatechars:12 }}</span>
+                            <span>{{ product.created_at|timesince }} ago</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Trust & Ecosystem -->
+        <section class="max-w-7xl mx-auto px-6 py-10 border-y border-slate-200">
+            <div class="text-center space-y-6 mb-16 max-w-4xl mx-auto">
+                <h3 class="text-4xl lg:text-5xl font-black font-outfit uppercase tracking-tighter text-slate-950 leading-none">Security <span class="premium-text-gradient italic">Architected.</span></h3>
+                <p class="text-slate-500 text-base lg:text-lg font-medium tracking-tight leading-relaxed opacity-70">Buying and selling on QSell is built on verified trust. Every transaction is protected.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="security-card flex flex-col items-center text-center">
+                    <div class="security-icon-box">
+                        <i data-lucide="shield-check" class="w-9 h-9"></i>
+                    </div>
+                    <h4 class="text-2xl font-black text-slate-900 uppercase tracking-tight font-outfit mb-6">Verified Sellers</h4>
+                    <p class="text-slate-500 text-sm leading-loose font-medium">Multi-step verification ensures every seller is verified before accessing the marketplace.</p>
+                </div>
+                <div class="security-card flex flex-col items-center text-center">
+                    <div class="security-icon-box">
+                        <i data-lucide="lock" class="w-9 h-9"></i>
+                    </div>
+                    <h4 class="text-2xl font-black text-slate-900 uppercase tracking-tight font-outfit mb-6">Secure Payments</h4>
+                    <p class="text-slate-500 text-sm leading-loose font-medium">Funds are held in secure escrow until the product is confirmed to match specifications perfectly.</p>
+                </div>
+                <div class="security-card flex flex-col items-center text-center">
+                    <div class="security-icon-box">
+                        <i data-lucide="truck" class="w-9 h-9"></i>
+                    </div>
+                    <h4 class="text-2xl font-black text-slate-900 uppercase tracking-tight font-outfit mb-6">Safe Delivery</h4>
+                    <p class="text-slate-500 text-sm leading-loose font-medium">Enjoy end-to-end tracked logistics or meet at "Verified Pickup Points" for secure physical exchange.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest Arrivals -->
+        <section class="max-w-7xl mx-auto px-6 py-12">
+            <div class="flex items-end justify-between mb-16">
+                <div class="space-y-4">
+                    <div class="inline-block px-4 py-1.5 bg-slate-50 text-indigo-600 text-[10px] font-black uppercase tracking-[0.3em] rounded-lg border border-slate-100">
+                        Market Updates
+                    </div>
+                    <h4 class="text-4xl lg:text-5xl font-black font-outfit uppercase tracking-tighter text-slate-950">Latest Arrivals</h4>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
+                {% for product in recent_products %}
+                <div class="group">
+                    <div class="aspect-square bg-slate-50 rounded-[2.5rem] border border-slate-100 overflow-hidden mb-8 relative group/img transition-all duration-500 hover:shadow-2xl hover:shadow-slate-200">
+                        <a href="{% url 'product_detail' product.id %}" class="block h-full w-full">
+                            {% if product.images.first %}
+                                <img src="{{ product.images.first.image.url }}" class="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-700">
+                            {% else %}
+                                <div class="w-full h-full flex items-center justify-center text-slate-200">
+                                    <i data-lucide="image" class="w-12 h-12"></i>
+                                </div>
+                            {% endif %}
+                            <div class="absolute inset-0 bg-indigo-600/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <div class="h-14 w-14 bg-white rounded-2xl flex items-center justify-center shadow-2xl scale-50 group-hover:scale-100 transition-all duration-500">
+                                    <i data-lucide="arrow-up-right" class="text-indigo-600 w-6 h-6"></i>
+                                </div>
+                            </div>
+                        </a>
+
+                        {% if user.is_authenticated and user != product.seller %}
+                        <a href="{% url 'add_to_wishlist' product.id %}" class="absolute top-5 right-5 h-10 w-10 bg-white/90 backdrop-blur rounded-xl flex items-center justify-center text-slate-300 hover:text-rose-500 transition-all z-20 shadow-xl border border-slate-50">
+                            <i data-lucide="heart" class="w-4 h-4"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="space-y-4 px-2">
+                        <div class="flex items-baseline gap-2">
+                            <p class="text-xl font-black text-slate-950 italic tracking-tighter">₹{{ product.price }}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-tighter line-clamp-1 group-hover:text-indigo-600 transition-colors mb-1">{{ product.title }}</h4>
+                            <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em]">{{ product.created_at|timesince }} ago</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+    {% endblock %}

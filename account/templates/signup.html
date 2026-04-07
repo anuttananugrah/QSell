@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | QSell Premium</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --brand-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #0f172a;
+        }
+        .font-outfit { font-family: 'Outfit', sans-serif; }
+        
+        .premium-glass {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .input-registry {
+            background: #f8fafc;
+            border: 2px solid #f1f5f9;
+            border-radius: 16px;
+            color: #0f172a;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+        }
+        .input-registry:focus {
+            background: #ffffff;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.05);
+            outline: none;
+        }
+        .premium-text-gradient {
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Soft Mesh */
+        .mesh-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 40%);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-center py-10 px-6">
+    <div class="mesh-bg"></div>
+
+    <div class="max-w-md w-full mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+        <!-- Logo/Header -->
+        <div class="text-center space-y-4">
+            <a href="/" class="inline-flex items-center gap-3 group">
+                <div class="h-12 w-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-indigo-500/30 group-hover:rotate-12 transition-transform duration-500">
+                    <img src="{% static 'images/logo.jpg' %}" alt="QSELL">
+                </div>
+                <span class="text-3xl font-black font-outfit tracking-tighter uppercase text-slate-950">QSell</span>
+            </a>
+            <h1 class="text-3xl font-black text-slate-950 tracking-tight uppercase font-outfit">Join the <span class="premium-text-gradient italic">Marketplace.</span></h1>
+            <p class="text-slate-400 text-xs font-black uppercase tracking-[0.3em]">India's Trusted Trading Marketplace</p>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="bg-white border border-slate-100 rounded-[2.5rem] shadow-2xl shadow-slate-200/60 p-8 lg:p-10">
+            <form method="POST" class="space-y-5">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                <div class="p-4 bg-rose-50 border border-rose-100 rounded-2xl mb-6">
+                    <ul class="text-[10px] text-rose-500 font-black uppercase tracking-widest space-y-1">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <li>{{ field.label }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">First Name</label>
+                        <input type="text" name="first_name" placeholder="John" required class="input-registry w-full px-5 py-4 text-xs tracking-wider">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Last Name</label>
+                        <input type="text" name="last_name" placeholder="Doe" required class="input-registry w-full px-5 py-4 text-xs tracking-wider">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                    <div class="relative group">
+                        <i data-lucide="mail" class="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                        <input type="email" name="email" placeholder="user@qsell.com" required class="input-registry w-full pl-12 pr-5 py-4 text-xs tracking-wider">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Password</label>
+                    <div class="relative group">
+                        <i data-lucide="lock" class="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                        <input type="password" name="password1" placeholder="••••••••" required class="input-registry w-full pl-12 pr-5 py-4 text-xs tracking-wider">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Verify Password</label>
+                    <div class="relative group">
+                        <i data-lucide="shield-check" class="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                        <input type="password" name="password2" placeholder="••••••••" required class="input-registry w-full pl-12 pr-5 py-4 text-xs tracking-wider">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-slate-950 hover:bg-indigo-600 text-white py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] transition-all shadow-2xl active:scale-95 flex items-center justify-center gap-3">
+                    Create Account <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </form>
+
+            <div class="mt-8 pt-8 border-t border-slate-50 text-center">
+                <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest">
+                    Already have an account? <a href="{% url 'loginpage' %}" class="text-indigo-600 hover:text-slate-950 transition-colors ml-2 underline underline-offset-4">Sign In</a>
+                </p>
+            </div>
+        </div>
+
+        <p class="text-center text-[9px] font-black text-slate-300 uppercase tracking-[0.4em]">
+            Safe & Secure Trading &bull; QSell Ecosystem v2.0
+        </p>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

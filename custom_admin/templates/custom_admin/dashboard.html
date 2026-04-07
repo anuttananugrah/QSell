@@ -1,0 +1,81 @@
+{% extends 'custom_admin/base_admin.html' %}
+
+{% block title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h2 class="text-3xl font-black text-slate-900 tracking-tight">System Overview</h2>
+    <p class="text-slate-500 mt-1">Real-time statistics for QSell Marketplace.</p>
+</div>
+
+<!-- Key Stat Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+            <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Total Users</p>
+            <h3 class="text-4xl font-black text-slate-900">{{ users_count }}</h3>
+        </div>
+        <div class="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600">
+            <i data-lucide="users" class="w-7 h-7"></i>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+            <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Total Ads</p>
+            <h3 class="text-4xl font-black text-slate-900">{{ products_count }}</h3>
+        </div>
+        <div class="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600">
+            <i data-lucide="package" class="w-7 h-7"></i>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex items-center justify-between relative overflow-hidden">
+        <div class="relative z-10">
+            <p class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">Pending Reports</p>
+            <h3 class="text-4xl font-black text-rose-600">{{ reports_count }}</h3>
+        </div>
+        <div class="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-600 relative z-10">
+            <i data-lucide="alert-triangle" class="w-7 h-7"></i>
+        </div>
+        {% if reports_count > 0 %}
+        <div class="absolute inset-0 bg-rose-50/50 mix-blend-multiply opacity-50 z-0"></div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Detailed Data sections -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    
+    <!-- Recent Reports Panel -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col">
+        <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
+            <h3 class="font-bold text-lg text-slate-900">Action Required: Recent Reports</h3>
+            <a href="{% url 'custom_admin:reports_list' %}" class="text-sm font-bold text-indigo-600 hover:text-indigo-800">View All</a>
+        </div>
+        <div class="p-6 flex-1 flex flex-col gap-4">
+            {% for rep in recent_reports %}
+                <div class="p-4 rounded-xl border border-rose-100 bg-rose-50/30 flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xs font-bold text-rose-600 bg-rose-100 px-2 py-0.5 rounded uppercase tracking-wider">Reported Product</span>
+                            <span class="text-xs font-medium text-slate-500">{{ rep.created_at|timesince }} ago</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm mb-1">Product: {{ rep.product.title }}</h4>
+                        <p class="text-sm text-slate-600 font-medium">"{{ rep.reason }}"</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{% url 'custom_admin:reports_list' %}" class="bg-white text-rose-600 px-3 py-1.5 rounded-lg border border-rose-200 text-xs font-bold hover:bg-rose-50">Review</a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="flex-1 flex flex-col items-center justify-center text-slate-400 py-10">
+                    <i data-lucide="check-circle" class="w-12 h-12 mb-3 text-emerald-400"></i>
+                    <p class="font-medium text-sm">No pending reports! All clear.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+</div>
+{% endblock %}

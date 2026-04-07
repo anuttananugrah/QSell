@@ -1,0 +1,54 @@
+{% extends 'custom_admin/base_admin.html' %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h2 class="text-3xl font-black text-slate-900 tracking-tight">Manage Users</h2>
+    <p class="text-slate-500 mt-1">Control access and view all registered users.</p>
+</div>
+
+<div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+    <table class="w-full text-left border-collapse">
+        <thead>
+            <tr class="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-widest text-slate-500 font-bold">
+                <th class="px-6 py-4">User</th>
+                <th class="px-6 py-4">Email</th>
+                <th class="px-6 py-4">Joined Date</th>
+                <th class="px-6 py-4">Status</th>
+                <th class="px-6 py-4 text-right">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+            {% for u in users %}
+            <tr class="hover:bg-slate-50 transition-colors">
+                <td class="px-6 py-4 font-bold text-slate-900 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 text-xs">
+                        {{ u.first_name|make_list|first|upper }}
+                    </div>
+                    {{ u.first_name }}
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-600">{{ u.email }}</td>
+                <td class="px-6 py-4 text-sm text-slate-600">{{ u.date_joined|date:"M d, Y" }}</td>
+                <td class="px-6 py-4">
+                    {% if u.is_active %}
+                        <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">Active</span>
+                    {% else %}
+                        <span class="bg-rose-100 text-rose-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">Blocked</span>
+                    {% endif %}
+                </td>
+                <td class="px-6 py-4 text-right">
+                    <a href="{% url 'custom_admin:toggle_user_status' u.id %}" class="inline-block text-xs font-bold px-4 py-2 border rounded-lg transition-colors {% if u.is_active %}border-rose-200 text-rose-600 hover:bg-rose-50{% else %}border-emerald-200 text-emerald-600 hover:bg-emerald-50{% endif %}">
+                        {% if u.is_active %}Block{% else %}Unblock{% endif %}
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="px-6 py-10 text-center text-slate-400 font-medium">No users found in the system.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

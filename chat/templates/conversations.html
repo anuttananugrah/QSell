@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages | QSell Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-outfit { font-family: 'Outfit', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .active-dot { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body class="bg-[#f8fafc] min-h-screen">
+    <!-- Premium Header -->
+    <header class="bg-white/70 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 h-24 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'home' %}" class="bg-indigo-600 p-2.5 rounded-2xl shadow-lg shadow-indigo-500/20 hover:scale-105 transition-transform">
+                    <i data-lucide="home" class="text-white w-5 h-5"></i>
+                </a>
+                <h1 class="text-3xl font-black text-slate-900 font-outfit tracking-tight">Messages</h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="px-4 py-2 bg-indigo-50 rounded-full flex items-center space-x-2">
+                    <span class="w-2 h-2 bg-indigo-600 rounded-full active-dot"></span>
+                    <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">{{ active_conversations|length }} Active</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-12">
+        <div class="grid grid-cols-1 gap-16">
+            
+            <!-- Received Requests (High Priority) -->
+            {% if received_requests %}
+            <section class="space-y-8">
+                <div class="flex items-center space-x-4">
+                    <h2 class="text-xs font-black text-indigo-500 uppercase tracking-[0.4em]">Pending Requests</h2>
+                    <div class="flex-1 h-px bg-indigo-100"></div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for req in received_requests %}
+                    <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.05)] flex flex-col justify-between group hover:border-indigo-200 transition-all duration-300">
+                            <div class="flex items-start justify-between mb-6">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center border border-indigo-100/50 text-indigo-600 font-black text-xl font-outfit">
+                                        {{ req.buyer.first_name|slice:":1"|upper }}
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-slate-900 font-outfit">{{ req.buyer.first_name }}</h3>
+                                        <p class="text-[10px] font-black {% if req.status == 'rejected' %}text-rose-500{% else %}text-slate-400{% endif %} uppercase tracking-widest mt-0.5">
+                                            {% if req.status == 'rejected' %}Declined by you{% else %}Wants to chat{% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">{{ req.updated_at|timesince }} ago</span>
+                            </div>
+                            
+                            <div class="bg-slate-50 p-4 rounded-2xl mb-8 flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-xl overflow-hidden shadow-sm">
+                                    {% if req.product.images.first %}
+                                        <img src="{{ req.product.images.first.image.url }}" class="w-full h-full object-cover">
+                                    {% else %}
+                                        <div class="w-full h-full bg-slate-200 flex items-center justify-center"><i data-lucide="package" class="w-4 h-4 text-slate-400"></i></div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-0.5">Product</p>
+                                    <p class="text-xs font-bold text-slate-700 truncate font-outfit">{{ req.product.title }}</p>
+                                </div>
+                            </div>
+
+                            {% if req.negotiated_amount %}
+                            <div class="mb-8 p-6 bg-indigo-50/50 rounded-[2rem] border border-indigo-100 flex items-center justify-between shadow-inner">
+                                <div class="space-y-1">
+                                    <p class="text-[9px] font-black text-indigo-400 uppercase tracking-[0.3em]">Proposed Valuation</p>
+                                    <p class="text-2xl font-black text-slate-900 italic tracking-tighter">₹{{ req.negotiated_amount }}</p>
+                                </div>
+                                <div class="h-10 w-10 bg-white rounded-xl flex items-center justify-center text-indigo-600 shadow-sm">
+                                    <i data-lucide="trending-down" class="w-5 h-5"></i>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="flex items-center space-x-3">
+                                {% if req.status == 'pending' %}
+                                    <a href="{% url 'approve_chat' req.id %}" class="flex-1 bg-indigo-600 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-lg shadow-indigo-500/20 hover:bg-slate-900 transition-all">Approve</a>
+                                    <a href="{% url 'reject_chat' req.id %}" class="px-6 bg-white border border-slate-200 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:text-rose-500 hover:border-rose-100 transition-all">Ignore</a>
+                                {% else %}
+                                    <a href="{% url 'approve_chat' req.id %}" class="flex-1 bg-emerald-500 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-lg shadow-emerald-500/20 hover:bg-slate-900 transition-all">Re-approve Request</a>
+                                {% endif %}
+                            </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Phone Number Requests (New Section) -->
+            {% if received_phone_requests %}
+            <section class="space-y-8">
+                <div class="flex items-center space-x-4">
+                    <h2 class="text-xs font-black text-rose-500 uppercase tracking-[0.4em]">Phone Number Requests</h2>
+                    <div class="flex-1 h-px bg-rose-100"></div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {% for p_req in received_phone_requests %}
+                    <div class="bg-white p-8 rounded-[2.5rem] border border-rose-100 shadow-sm flex flex-col justify-between group hover:border-rose-300 transition-all duration-300">
+                            <div class="flex items-start justify-between mb-6">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center border border-rose-100 text-rose-600 font-black text-xl font-outfit">
+                                        {{ p_req.buyer.first_name|slice:":1"|upper }}
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-slate-900 font-outfit">{{ p_req.buyer.first_name }}</h3>
+                                        <p class="text-[10px] font-black {% if p_req.status == 'rejected' %}text-rose-500{% else %}text-rose-400{% endif %} uppercase tracking-widest mt-0.5">
+                                            {% if p_req.status == 'rejected' %}Declined by you{% else %}Wants your phone number{% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">{{ p_req.updated_at|timesince }} ago</span>
+                            </div>
+                            
+                            <div class="bg-rose-50/30 p-4 rounded-2xl mb-8 flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-xl overflow-hidden shadow-sm">
+                                    {% if p_req.product.images.first %}
+                                        <img src="{{ p_req.product.images.first.image.url }}" class="w-full h-full object-cover">
+                                    {% else %}
+                                        <div class="w-full h-full bg-slate-200 flex items-center justify-center"><i data-lucide="package" class="w-4 h-4 text-slate-400"></i></div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-0.5">Product</p>
+                                    <p class="text-xs font-bold text-slate-700 truncate font-outfit">{{ p_req.product.title }}</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-3">
+                                {% if p_req.status == 'pending' %}
+                                    <a href="{% url 'approve_phone' p_req.id %}" class="flex-1 bg-rose-600 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-lg shadow-rose-500/20 hover:bg-slate-900 transition-all">Approve Phone Access</a>
+                                    <a href="{% url 'reject_phone' p_req.id %}" class="px-6 bg-white border border-slate-200 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:text-rose-500 hover:border-rose-100 transition-all">Reject</a>
+                                {% elif p_req.status == 'rejected' %}
+                                    <a href="{% url 'approve_phone' p_req.id %}" class="flex-1 bg-emerald-500 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-lg shadow-emerald-500/20 hover:bg-slate-900 transition-all">Change to Approved</a>
+                                {% else %}
+                                    <div class="flex-1 bg-emerald-50 text-emerald-600 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center border border-emerald-100 italic">Access Granted</div>
+                                {% endif %}
+                            </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Active Conversations -->
+            <section class="space-y-8">
+                <div class="flex items-center space-x-4">
+                    <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.4em]">Active Chats</h2>
+                    <div class="flex-1 h-px bg-slate-100"></div>
+                </div>
+
+                <div class="space-y-4">
+                    {% for convo in active_conversations %}
+                    <a href="{% url 'chat_detail' convo.id %}" class="block group">
+                        <div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1.5 transition-all duration-500 flex items-center relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full -mr-16 -mt-16 opacity-0 group-hover:opacity-40 transition-opacity"></div>
+                            
+                            <!-- Avatar -->
+                            <div class="relative z-10">
+                                <div class="w-20 h-20 rounded-[1.75rem] border-4 border-white shadow-xl overflow-hidden ring-1 ring-slate-100">
+                                    {% if request.user == convo.buyer %}
+                                        {% if convo.seller.userprofile.profile_image %}
+                                            <img src="{{ convo.seller.userprofile.profile_image.url }}" class="w-full h-full object-cover">
+                                        {% else %}
+                                            <div class="w-full h-full bg-slate-50 flex items-center justify-center text-indigo-600 font-black text-2xl font-outfit">{{ convo.seller.first_name|slice:":1"|upper }}</div>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if convo.buyer.userprofile.profile_image %}
+                                            <img src="{{ convo.buyer.userprofile.profile_image.url }}" class="w-full h-full object-cover">
+                                        {% else %}
+                                            <div class="w-full h-full bg-slate-50 flex items-center justify-center text-indigo-600 font-black text-2xl font-outfit">{{ convo.buyer.first_name|slice:":1"|upper }}</div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                                <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 border-4 border-white rounded-full active-dot shadow-lg"></div>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="ml-8 flex-1 relative z-10">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="text-lg font-bold text-slate-900 font-outfit flex items-center space-x-2">
+                                        <span>
+                                            {% if request.user == convo.buyer %}
+                                                {{ convo.seller.first_name }}
+                                            {% else %}
+                                                {{ convo.buyer.first_name }}
+                                            {% endif %}
+                                        </span>
+                                        {% if convo.unread_count > 0 %}
+                                            <span class="w-2 h-2 bg-indigo-600 rounded-full"></span>
+                                        {% endif %}
+                                    </h3>
+                                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">{{ convo.created_at|timesince }} ago</span>
+                                </div>
+                                
+                                <div class="flex items-center space-x-3 text-indigo-600 font-bold text-[10px] uppercase tracking-widest mb-2 opacity-70">
+                                    <i data-lucide="package" class="w-3.5 h-3.5"></i>
+                                    <span>{{ convo.product.title|truncatechars:30 }}</span>
+                                </div>
+
+                                <p class="text-sm text-slate-500 font-medium line-clamp-1 italic max-w-md">
+                                    {% if convo.message_set.last %}
+                                        {{ convo.message_set.last.message }}
+                                    {% else %}
+                                        No messages yet...
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                            <!-- Action Icon -->
+                            <div class="ml-6 scale-75 group-hover:scale-100 opacity-0 group-hover:opacity-100 transition-all duration-500 relative z-10">
+                                <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-500/20">
+                                    <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% empty %}
+                    <div class="py-24 flex flex-col items-center justify-center text-center space-y-6">
+                        <div class="w-32 h-32 bg-slate-50 rounded-[3rem] flex items-center justify-center border-2 border-dashed border-slate-200">
+                            <i data-lucide="message-square" class="w-12 h-12 text-slate-200"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900 font-outfit">Silence is Golden?</h3>
+                            <p class="text-sm text-slate-400 font-medium mt-1">Start a conversation with a seller to see it here.</p>
+                        </div>
+                        <a href="{% url 'home' %}" class="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-indigo-500/20">Explore Products</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Sent requests (Low Priority) -->
+            {% if sent_requests %}
+            <section class="space-y-8">
+                <div class="flex items-center space-x-4">
+                    <h2 class="text-xs font-black text-slate-300 uppercase tracking-[0.4em]">Active Requests</h2>
+                    <div class="flex-1 h-px bg-slate-100"></div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 opacity-60">
+                    {% for req in sent_requests %}
+                    <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col items-center text-center border-dashed {% if req.status == 'rejected' %}border-rose-200 bg-rose-50/10{% endif %}">
+                        <div class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300 font-black mb-4">
+                            {{ req.seller.first_name|slice:":1"|upper }}
+                        </div>
+                        <h4 class="font-bold text-slate-700 text-sm mb-1 font-outfit">{{ req.seller.first_name }}</h4>
+                        <p class="text-[9px] font-black {% if req.status == 'rejected' %}text-rose-500{% else %}text-slate-400{% endif %} uppercase tracking-widest mb-4">
+                            {% if req.status == 'rejected' %}Request Declined{% else %}Pending Response{% endif %}
+                        </p>
+                        <div class="w-full bg-slate-50 py-2 px-4 rounded-xl text-[10px] font-bold text-slate-400 truncate">
+                            {{ req.product.title }}
+                        </div>
+                        {% if req.negotiated_amount %}
+                        <div class="mt-4 px-4 py-2 bg-indigo-50 rounded-xl">
+                            <p class="text-[8px] font-black text-indigo-400 uppercase tracking-widest">Offer: ₹{{ req.negotiated_amount }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+
+            <!-- Sent Phone Requests -->
+            {% if sent_phone_requests %}
+            <section class="space-y-8">
+                <div class="flex items-center space-x-4">
+                    <h2 class="text-xs font-black text-rose-300 uppercase tracking-[0.4em]">Sent Phone Requests</h2>
+                    <div class="flex-1 h-px bg-rose-100"></div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 opacity-70">
+                    {% for p_req in sent_phone_requests %}
+                    <div class="bg-white p-6 rounded-[2rem] border border-rose-100 shadow-sm flex flex-col items-center text-center border-dashed {% if p_req.status == 'rejected' %}border-rose-200 bg-rose-50/10{% endif %}">
+                        <div class="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-300 font-black mb-4">
+                            {{ p_req.seller.first_name|slice:":1"|upper }}
+                        </div>
+                        <h4 class="font-bold text-slate-700 text-sm mb-1 font-outfit">{{ p_req.seller.first_name }}</h4>
+                        <p class="text-[9px] font-black {% if p_req.status == 'rejected' %}text-rose-500{% else %}text-rose-400{% endif %} uppercase tracking-widest mb-4">
+                            {% if p_req.status == 'rejected' %}Access Declined{% elif p_req.status == 'approved' %}Access Approved{% else %}Pending Number{% endif %}
+                        </p>
+                        <div class="w-full bg-rose-50/30 py-2 px-4 rounded-xl text-[10px] font-bold text-rose-400 truncate">
+                            {{ p_req.product.title }}
+                        </div>
+                        {% if p_req.status == 'approved' %}
+                        <a href="{% url 'product_detail' p_req.product.id %}" class="mt-4 text-[10px] font-black text-rose-600 uppercase underline">View Number</a>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

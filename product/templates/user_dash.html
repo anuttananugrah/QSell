@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard | QSell Premium{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 80px);
+    }
+    @media (min-width: 1024px) {
+        .dashboard-container {
+            flex-direction: row;
+        }
+    }
+    .sidebar-active {
+        background: rgba(99, 102, 241, 0.1);
+        color: var(--primary) !important;
+        border-color: rgba(99, 102, 241, 0.2);
+    }
+    .dash-stat-card {
+        background: white;
+        border-radius: 32px;
+        border: 1px solid #f1f5f9;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dash-stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container max-w-7xl mx-auto w-full">
+    <!-- Sidebar -->
+    <aside class="w-full lg:w-72 p-6 lg:p-8 border-r border-slate-100 flex flex-col gap-8 bg-red-100 backdrop-blur-sm">
+        <div class="space-y-1">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] px-4 mb-4">Menu</p>
+            
+            <a href="{% url 'profile' %}" class="flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all font-bold text-sm">
+                <i data-lucide="user-circle" class="w-5 h-5"></i>
+                <span>Profile</span>
+            </a>
+            
+            <a href="{% url 'my_ads' %}" class="sidebar-active flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold text-sm border border-transparent transition-all">
+                <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                <span>My Ads</span>
+            </a>
+            
+            <a href="{% url 'add_product' %}" class="flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all font-bold text-sm">
+                <i data-lucide="plus-square" class="w-5 h-5"></i>
+                <span>List New Item</span>
+            </a>
+            
+            <a href="{% url 'wishlist' %}" class="flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all font-bold text-sm">
+                <i data-lucide="heart" class="w-5 h-5"></i>
+                <span>Wishlist</span>
+            </a>
+            
+            <a href="{% url 'conversations' %}" class="flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-all font-bold text-sm relative">
+                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                <span>Messages</span>
+                {% if unread_count %}
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 h-2 w-2 bg-indigo-500 rounded-full"></span>
+                {% endif %}
+            </a>
+        </div>
+
+        <div class="mt-auto pt-8 border-t border-slate-100">
+            <a href="{% url 'logout' %}" class="flex items-center gap-3 px-4 py-3.5 rounded-2xl text-rose-500 hover:bg-rose-50 transition-all font-bold text-sm">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 lg:p-12">
+        <div class="max-w-5xl mx-auto space-y-12">
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="space-y-1">
+                    <h1 class="text-3xl font-bold text-slate-900 tracking-tight font-outfit">Seller Dashboard</h1>
+                    <p class="text-slate-500 font-medium text-sm">Manage your inventory and track your sales performance.</p>
+                </div>
+                <a href="{% url 'add_product' %}" class="btn-premium px-8 py-4 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                    <i data-lucide="plus" class="w-4 h-4 text-white"></i> Create New Ad
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Total Ads -->
+                <div class="dash-stat-card p-8 flex items-center gap-6">
+                    <div class="h-16 w-16 bg-indigo-50 text-indigo-600 rounded-[1.25rem] flex items-center justify-center shadow-inner">
+                        <i data-lucide="package" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Assets</p>
+                        <p class="text-3xl font-bold text-slate-900 font-outfit">{{ products.count }}</p>
+                    </div>
+                </div>
+
+                <!-- Active Ads (Waitler: QSell uses 'is_sold' to determine active status usually) -->
+                <div class="dash-stat-card p-8 flex items-center gap-6">
+                    <div class="h-16 w-16 bg-emerald-50 text-emerald-600 rounded-[1.25rem] flex items-center justify-center shadow-inner">
+                        <i data-lucide="activity" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-1">Active Now</p>
+                        <p class="text-3xl font-bold text-slate-900 font-outfit">{{ products.count }}</p>
+                    </div>
+                </div>
+
+                <!-- Messages/Analytics Placeholder -->
+                <div class="dash-stat-card p-8 flex items-center gap-6">
+                    <div class="h-16 w-16 bg-rose-50 text-rose-600 rounded-[1.25rem] flex items-center justify-center shadow-inner">
+                        <i data-lucide="trending-up" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1">Reputation</p>
+                        <p class="text-3xl font-bold text-slate-900 font-outfit">Top Rated</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ads List -->
+            <div class="space-y-8">
+                <div class="flex items-center justify-between px-2">
+                    <h2 class="text-xl font-bold text-slate-900 tracking-tight font-outfit uppercase tracking-widest text-xs">Your Listings</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for product in products %}
+                    <div class="premium-card bg-white overflow-hidden group border-slate-100" style="border-radius: 32px;">
+                        <div class="h-48 overflow-hidden relative">
+                            {% if product.images.first %}
+                            <img src="{{ product.images.first.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+                            {% else %}
+                            <div class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-200">
+                                <i data-lucide="image" class="w-10 h-10"></i>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Badges -->
+                            <div class="absolute top-4 left-4 flex flex-col gap-2">
+                                <span class="bg-white/90 backdrop-blur px-3 py-1 text-[9px] font-bold text-slate-700 uppercase tracking-widest rounded-lg shadow-sm">{{ product.condition }}</span>
+                                {% if product.is_boost_active %}
+                                <span class="premium-gradient px-3 py-1 text-[9px] font-bold text-white uppercase tracking-widest rounded-lg shadow-lg flex items-center gap-1.5">
+                                    <i data-lucide="zap" class="w-3 h-3"></i> Boosted
+                                </span>
+                                {% endif %}
+                                {% if product.is_sold %}
+                                <span class="bg-rose-500 px-3 py-1 text-[9px] font-bold text-white uppercase tracking-widest rounded-lg shadow-lg">Sold Out</span>
+                                {% endif %}
+                            </div>
+
+                            <a href="{% url 'product_detail' product.id %}" class="absolute bottom-4 right-4 h-10 w-10 bg-white/90 backdrop-blur rounded-xl flex items-center justify-center text-slate-400 hover:text-indigo-600 transition-all opacity-0 group-hover:opacity-100 shadow-xl">
+                                <i data-lucide="external-link" class="w-4 h-4"></i>
+                            </a>
+                        </div>
+
+                        <div class="p-6 space-y-4">
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-base mb-1 line-clamp-1 font-outfit">{{ product.title }}</h3>
+                                <p class="text-indigo-600 font-bold text-lg">₹{{ product.price }}</p>
+                            </div>
+                            
+                            <div class="flex items-center gap-2 pt-4 border-t border-slate-50">
+                                <a href="{% url 'edit_product' product.id %}" class="flex-1 py-3 bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-900 rounded-xl transition-all font-bold text-[10px] uppercase tracking-widest text-center">
+                                    Edit
+                                </a>
+                                {% if not product.is_boost_active and not product.is_sold %}
+                                <a href="{% url 'boost_product' product.id %}" class="flex-1 py-3 bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-xl transition-all font-bold text-[10px] uppercase tracking-widest text-center">
+                                    Boost
+                                </a>
+                                {% endif %}
+                                <a href="{% url 'delete_product' product.id %}" class="p-3 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-span-full py-24 bg-white rounded-[3rem] border-2 border-dashed border-slate-100 text-center space-y-6">
+                        <div class="w-20 h-20 bg-indigo-50 text-indigo-400 rounded-full flex items-center justify-center mx-auto shadow-inner">
+                            <i data-lucide="package-plus" class="w-10 h-10"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="text-xl font-bold text-slate-900 tracking-tight">Your inventory is empty</h3>
+                            <p class="text-slate-400 text-sm font-medium">Ready to sell something? Create your first listing now!</p>
+                        </div>
+                        <a href="{% url 'add_product' %}" class="btn-premium inline-flex px-10 py-4 font-bold text-xs uppercase tracking-widest">
+                            Start Selling
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

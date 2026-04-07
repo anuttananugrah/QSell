@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Wishlist | QSell Premium{% endblock %}
+
+{% block content %}
+<main class="max-w-7xl mx-auto px-4 py-8 lg:py-12">
+    <!-- Header -->
+    <div class="mb-8 space-y-4">
+        <div class="flex items-center gap-2 text-[10px] font-bold text-indigo-500 uppercase tracking-[0.2em]">
+            <a href="{% url 'home' %}" class="hover:text-slate-900 transition-colors">Marketplace</a>
+            <i data-lucide="chevron-right" class="w-3 h-3 text-slate-300"></i>
+            <span>Wishlist</span>
+        </div>
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div class="space-y-2">
+                <h1 class="text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight font-outfit">Your <span class="premium-text-gradient">Favorites.</span></h1>
+                <p class="text-slate-500 font-medium text-sm lg:text-base">Quickly access the items you've saved for later.</p>
+            </div>
+            {% if items %}
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-100 px-4 py-2 rounded-xl border border-slate-200/50">{{ items.count }} Items Saved</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if items %}
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 lg:gap-8">
+        {% for item in items %}
+        <div class="premium-card group bg-white shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10">
+            <a href="{% url 'product_detail' item.product.id %}">
+                <!-- Image Card -->
+                <div class="aspect-square overflow-hidden relative rounded-t-[23px]">
+                    {% if item.product.images.first %}
+                        <img src="{{ item.product.images.first.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
+                    {% else %}
+                        <div class="w-full h-full bg-slate-50 flex items-center justify-center text-slate-200">
+                            <i data-lucide="image" class="w-10 h-10"></i>
+                        </div>
+                    {% endif %}
+
+                    <!-- Badges -->
+                    <div class="absolute top-3 left-3">
+                        <span class="px-2.5 py-1 bg-white/90 backdrop-blur text-[8px] font-bold uppercase tracking-widest text-indigo-600 rounded-lg shadow-sm border border-white/20">
+                            {{ item.product.condition }}
+                        </span>
+                    </div>
+
+                    <!-- Remove Button -->
+                    <a href="{% url 'remove_from_wishlist' item.product.id %}" class="absolute top-3 right-3 h-8 w-8 bg-white/90 backdrop-blur rounded-lg flex items-center justify-center text-rose-500 hover:bg-rose-500 hover:text-white transition-all opacity-0 group-hover:opacity-100 shadow-sm border border-white/20 z-20">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- Info -->
+                <div class="p-5 space-y-3">
+                    <div class="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-widest truncate">
+                        <i data-lucide="map-pin" class="w-3 h-3 text-indigo-400"></i>
+                        <span>{{ item.product.location|truncatechars:15 }}</span>
+                    </div>
+                    <h3 class="font-bold text-slate-900 text-sm mb-1 line-clamp-1 truncate font-outfit">{{ item.product.title }}</h3>
+                    <div class="flex items-end justify-between pt-2 border-t border-slate-50">
+                        <p class="text-indigo-600 font-bold text-lg">₹{{ item.product.price }}</p>
+                        <span class="text-[8px] font-bold text-slate-300 uppercase tracking-widest mb-1">{{ item.product.created_at|date:"d M" }}</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="max-w-md mx-auto py-16 text-center space-y-8">
+        <div class="relative inline-block">
+            <div class="w-24 h-24 bg-indigo-50 text-indigo-200 rounded-[2rem] flex items-center justify-center mx-auto shadow-inner rotate-6">
+                <i data-lucide="heart-off" class="w-12 h-12"></i>
+            </div>
+            <div class="absolute -top-2 -right-2 w-8 h-8 bg-rose-500 text-white rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+            </div>
+        </div>
+        <div class="space-y-2">
+            <h3 class="text-2xl font-bold text-slate-900 tracking-tight font-outfit">Your wishlist is lonely</h3>
+            <p class="text-slate-500 font-medium text-sm">Save items you love to find them easily later and track price changes.</p>
+        </div>
+        <a href="{% url 'home' %}" class="btn-premium inline-flex items-center gap-3 px-10 py-4 font-bold text-xs uppercase tracking-widest">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Discover Items</span>
+        </a>
+    </div>
+    {% endif %}
+</main>
+{% endblock %}

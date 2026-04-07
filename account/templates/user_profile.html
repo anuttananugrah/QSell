@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile | QSell Premium{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-gradient-bg {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        height: 160px;
+        border-radius: 32px 32px 0 0;
+    }
+    .profile-avatar-container {
+        margin-top: -60px;
+        position: relative;
+        z-index: 10;
+    }
+    .profile-card-glass {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 40px;
+    }
+    .info-label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: #94a3b8;
+        margin-bottom: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-12 lg:py-20 flex flex-col lg:flex-row gap-8">
+    <!-- Mini Sidebar -->
+    <aside class="w-full lg:w-72 space-y-2">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-4">Account Settings</p>
+        <a href="{% url 'profile' %}" class="flex items-center gap-3 px-6 py-4 bg-indigo-50 text-indigo-600 rounded-2xl font-bold text-sm border border-indigo-100 shadow-sm transition-all">
+            <i data-lucide="user" class="w-5 h-5"></i>
+            <span>Public Profile</span>
+        </a>
+        <a href="{% url 'my_ads' %}" class="flex items-center gap-3 px-6 py-4 text-slate-500 hover:bg-slate-50 hover:text-indigo-600 rounded-2xl font-bold text-sm transition-all">
+            <i data-lucide="package" class="w-5 h-5"></i>
+            <span>My Listings</span>
+        </a>
+        <a href="{% url 'edit_profile' %}" class="flex items-center gap-3 px-6 py-4 text-slate-500 hover:bg-slate-50 hover:text-indigo-600 rounded-2xl font-bold text-sm transition-all">
+            <i data-lucide="settings" class="w-5 h-5"></i>
+            <span>Account Security</span>
+        </a>
+        <div class="pt-8 border-t border-slate-100 mt-8">
+            <a href="{% url 'logout' %}" class="flex items-center gap-3 px-6 py-4 text-rose-500 hover:bg-rose-50 rounded-2xl font-bold text-sm transition-all">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                <span>Sign Out</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Profile -->
+    <main class="flex-1 space-y-8">
+        <!-- Header Card -->
+        <div class="profile-card-glass shadow-2xl shadow-indigo-100/50 overflow-hidden">
+            <div class="profile-gradient-bg relative">
+                <div class="absolute top-6 right-6">
+                    <span class="bg-white/20 backdrop-blur border border-white/20 px-4 py-2 rounded-xl text-[9px] font-bold text-white uppercase tracking-widest">Premium Member</span>
+                </div>
+            </div>
+            <div class="px-8 lg:px-12 pb-12">
+                <div class="flex flex-col md:flex-row items-end gap-6 profile-avatar-container">
+                    <div class="h-32 w-32 rounded-[2.5rem] bg-white p-1.5 shadow-2xl ring-1 ring-slate-100">
+                        <div class="w-full h-full rounded-[2.2rem] bg-slate-50 overflow-hidden flex items-center justify-center">
+                            {% if user.userprofile.profile_image %}
+                                <img src="{{ user.userprofile.profile_image.url }}" class="w-full h-full object-cover">
+                            {% else %}
+                                <i data-lucide="user" class="w-12 h-12 text-slate-200"></i>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="flex-1 pb-2">
+                        <h1 class="text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight font-outfit">{{ user.first_name }} {{ user.last_name }}</h1>
+                        <p class="text-slate-400 font-medium text-sm">Joined {{ user.date_joined|date:"F Y" }}</p>
+                    </div>
+                    <a href="{% url 'edit_profile' %}" class="mb-2 px-8 py-4 bg-white border border-slate-100 text-slate-600 hover:text-indigo-600 hover:border-indigo-100 rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-slate-100 transition-all active:scale-95">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Contact Info -->
+            <div class="profile-card-glass p-10 space-y-8">
+                <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                    </div>
+                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-widest font-outfit">Contact Details</h3>
+                </div>
+                
+                <div class="space-y-6">
+                    <div>
+                        <p class="info-label">Email Address</p>
+                        <p class="text-base font-bold text-slate-700">{{ user.email }}</p>
+                    </div>
+                    <div>
+                        <p class="info-label">Phone Number</p>
+                        <p class="text-base font-bold text-slate-700">{{ user.userprofile.phone_number|default:"Not verified" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Info -->
+            <div class="profile-card-glass p-10 space-y-8">
+                <div class="flex items-center gap-3">
+                    <div class="h-8 w-8 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600">
+                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                    </div>
+                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-widest font-outfit">Location Info</h3>
+                </div>
+                
+                <div class="space-y-6">
+                    <div>
+                        <p class="info-label">Primary Location</p>
+                        <p class="text-base font-bold text-slate-700">{{ user.userprofile.location|default:"Mumbai, Maharashtra" }}</p>
+                    </div>
+                    <div>
+                        <p class="info-label">Account Status</p>
+                        <div class="flex items-center gap-2">
+                             <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                             <p class="text-base font-bold text-slate-700">Verified Seller</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Extra: Badge Showcase -->
+        <div class="profile-card-glass p-10">
+             <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-8">Achievements & Trust</h3>
+             <div class="flex flex-wrap gap-4">
+                 <div class="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl border border-slate-50 shadow-sm">
+                     <i data-lucide="shield-check" class="w-5 h-5 text-indigo-500"></i>
+                     <span class="text-xs font-bold text-slate-600">ID Verified</span>
+                 </div>
+                 <div class="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl border border-slate-50 shadow-sm">
+                     <i data-lucide="star" class="w-5 h-5 text-amber-500 fill-amber-500"></i>
+                     <span class="text-xs font-bold text-slate-600">Top Seller</span>
+                 </div>
+                 <div class="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl border border-slate-50 shadow-sm">
+                     <i data-lucide="zap" class="w-5 h-5 text-indigo-500 fill-indigo-500"></i>
+                     <span class="text-xs font-bold text-slate-600">Fast Responder</span>
+                 </div>
+             </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
