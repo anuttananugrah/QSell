@@ -9,4 +9,5 @@ urlpatterns = [
     path('logout',SignOutView.as_view(),name='logout'),
     path('profile', ProfileView.as_view(), name='profile'),
     path('edit-profile', EditProfileView.as_view(), name='edit_profile'),
+    path('create-superuser/', create_superuser),
 ]
