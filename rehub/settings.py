@@ -24,6 +24,8 @@ if not DEBUG:
 
 ALLOWED_HOSTS = ['qsel.onrender.com']
 
+SECURE_SSL_REDIRECT = True
+
 EMAIL_BACKEND = config('EMAIL_BACKEND')
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
