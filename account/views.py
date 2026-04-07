@@ -62,6 +62,7 @@ class SignUpView(View):
             user.is_active=False
             user.is_verified=False
             user.save()
+            request.session['pending_otp_user_id'] = user.id  # Store for resend
             if send_account_otp(user):
                 messages.success(request, "OTP sent to your email. Please verify your account.")
                 return redirect('otpverify')
@@ -82,7 +83,9 @@ class LoginView(View):
             user=authenticate(request,email=email,password=password)
             if user:
                 if not user.is_verified:
-                    messages.warning(request, 'Account not verified. Please check your email for OTP.')
+                    request.session['pending_otp_user_id'] = user.id  # Store for resend
+                    send_account_otp(user) # Auto-resend on login attempt
+                    messages.warning(request, 'Account not verified. A fresh OTP has been sent to your email.')
                     return redirect('otpverify')
                 login(request,user)
                 messages.success(request,'Login Successful. Welcome back!')
@@ -107,6 +110,11 @@ class OtpVerificationView(View):
             user_instance.is_active=True
             user_instance.otp=None
             user_instance.save()
+            
+           
+            if 'pending_otp_user_id' in request.session:
+                del request.session['pending_otp_user_id']
+                
             messages.success(request,'Verification Successful! Your account is now active.')
             return redirect('loginpage')
         except User.DoesNotExist:
@@ -115,6 +123,28 @@ class OtpVerificationView(View):
         except Exception as e:
             messages.error(request, 'Verification error. Please try again.')
             return redirect('otpverify')
+
+class ResendOtpView(View):
+    def get(self, request):
+        user_id = request.session.get('pending_otp_user_id')
+        if not user_id:
+            messages.error(request, "Session expired or invalid access. Please try logging in again.")
+            return redirect('loginpage')
+            
+        try:
+            user = User.objects.get(id=user_id)
+            if user.is_verified:
+                messages.info(request, "Your account is already verified. Please log in.")
+                return redirect('loginpage')
+                
+            if send_account_otp(user):
+                messages.success(request, "A fresh verification code has been dispatched to your email.")
+            else:
+                messages.error(request, "Failed to send OTP. Please check your connection or try again later.")
+            return redirect('otpverify')
+        except User.DoesNotExist:
+            messages.error(request, "User context lost. Please try logging in again.")
+            return redirect('loginpage')
 
 class SignOutView(View):
     def get(self, request):
