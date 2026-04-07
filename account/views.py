@@ -80,13 +80,16 @@ class LoginView(View):
         if data_form.is_valid():
             email=data_form.cleaned_data.get('email')
             password=data_form.cleaned_data.get('password')
-            user=authenticate(request,email=email,password=password)
+            # Use username=email to ensure compatibility with most backends
+            user=authenticate(request,username=email,password=password)
+            
             if user:
                 if not user.is_verified:
-                    request.session['pending_otp_user_id'] = user.id  # Store for resend
-                    send_account_otp(user) # Auto-resend on login attempt
+                    request.session['pending_otp_user_id'] = user.id
+                    send_account_otp(user) # Auto-resend
                     messages.warning(request, 'Account not verified. A fresh OTP has been sent to your email.')
                     return redirect('otpverify')
+                
                 login(request,user)
                 messages.success(request,'Login Successful. Welcome back!')
                 if user.is_superuser:
@@ -95,8 +98,12 @@ class LoginView(View):
             else:
                 messages.warning(request,'Invalid email or password.')
                 return redirect('loginpage')
-        messages.error(request,'invalid input recieved')
-        return render(request,'login.html',{'form':data_form})
+        
+        # If form is invalid, show specific errors
+        for field, errors in data_form.errors.items():
+            for error in errors:
+                messages.error(request, f"{field.title()}: {error}")
+        return redirect('loginpage')
             
     
 class OtpVerificationView(View):

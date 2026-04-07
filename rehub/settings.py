@@ -16,6 +16,8 @@ from decouple import config
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
+# Reduce session/cache memory usage
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
