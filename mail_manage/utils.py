@@ -13,6 +13,7 @@ def send_account_otp(user_instance):
     message = f'Welcome to QSell! Your verification code is: {otp}'
     from_email = settings.DEFAULT_FROM_EMAIL
     recipient_list = [user_instance.email]
+    print("OTP function triggered")
     
     try:
         send_mail(
