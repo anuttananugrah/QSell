@@ -4,6 +4,32 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from account.models import User
 
+# def send_account_otp(user_instance):
+#     """Generates and sends an OTP for account verification."""
+#     user_instance.generate_otp()
+#     otp = user_instance.otp
+    
+#     subject = 'QSell - Verify Your Account'
+#     message = f'Welcome to QSell! Your verification code is: {otp}'
+#     from_email = settings.DEFAULT_FROM_EMAIL
+#     recipient_list = [user_instance.email]
+#     print("OTP function triggered")
+    
+#     try:
+#         send_mail(
+#             subject,
+#             message,
+#             from_email,
+#             recipient_list,
+#             fail_silently=False,
+#         )
+#         return True
+#     except Exception as e:
+#         print(f"Error sending OTP email: {e}")
+#         return False
+
+
+
 def send_account_otp(user_instance):
     """Generates and sends an OTP for account verification."""
     user_instance.generate_otp()
@@ -13,20 +39,32 @@ def send_account_otp(user_instance):
     message = f'Welcome to QSell! Your verification code is: {otp}'
     from_email = settings.DEFAULT_FROM_EMAIL
     recipient_list = [user_instance.email]
+    
     print("OTP function triggered")
+    print(f"Sending OTP to: {recipient_list}")
+    print(f"From: {from_email}")
+    print(f"EMAIL_HOST_USER: {settings.EMAIL_HOST_USER}")
+    print(f"EMAIL_HOST: {settings.EMAIL_HOST}")
+    print(f"EMAIL_PORT: {settings.EMAIL_PORT}")
+    print(f"EMAIL_USE_TLS: {settings.EMAIL_USE_TLS}")
+    print(f"PASSWORD SET: {'Yes' if settings.EMAIL_HOST_PASSWORD else 'No'}")
     
     try:
-        send_mail(
+        result = send_mail(
             subject,
             message,
             from_email,
             recipient_list,
             fail_silently=False,
         )
+        print(f"send_mail result: {result}")  # 1 = success, 0 = failed
         return True
     except Exception as e:
-        print(f"Error sending OTP email: {e}")
+        print(f"FULL ERROR: {type(e).__name__}: {e}")
         return False
+
+
+
 
 def send_report_notification(product, reporter, reason, host_url=''):
     """Notifies the admin about a reported product."""
