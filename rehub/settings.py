@@ -22,7 +22,7 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
 
-ALLOWED_HOSTS = ['qsel.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 SECURE_SSL_REDIRECT = True
 
