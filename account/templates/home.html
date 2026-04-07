@@ -5,14 +5,14 @@
 {% block content %}
 
 <!-- HERO -->
-<section class="text-center py-20 px-6 bg-gradient-to-br from-indigo-50 to-purple-50">
+<section class="text-center py-12 md:py-20 px-4 md:px-6 bg-gradient-to-br from-indigo-50 to-purple-50">
 
-    <h1 class="text-5xl md:text-7xl font-black font-outfit leading-tight">
+    <h1 class="text-4xl md:text-7xl font-black font-outfit leading-tight tracking-tighter">
         Trade Smarter. <br>
         <span class="text-indigo-600">Buy Better.</span>
     </h1>
 
-    <p class="mt-6 text-gray-500 max-w-xl mx-auto">
+    <p class="mt-4 md:mt-6 text-slate-500 text-sm md:text-base max-w-xl mx-auto px-4">
         Discover premium pre-owned products with verified sellers and trusted transactions.
     </p>
 
@@ -31,11 +31,11 @@
 
 
 <!-- CATEGORIES -->
-<section class="py-16 max-w-6xl mx-auto px-6">
+<section class="py-12 md:py-16 max-w-6xl mx-auto px-4 md:px-6">
 
-    <h2 class="text-3xl font-black mb-10">Categories</h2>
+    <h2 class="text-2xl md:text-3xl font-black mb-8 md:mb-10 font-outfit">Categories</h2>
 
-    <div class="w-full grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
+    <div class="w-full grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-8">
         {% for cat_slug, cat_name, icon in category_list|slice:":18" %}
         <a href="{% url 'category_products' cat_slug %}" class="category-card group">
             <div class="flex flex-col items-center">
@@ -54,16 +54,16 @@
 
 
 <!-- FEATURED PRODUCTS -->
-<section class="py-16 bg-gray-50 px-6">
+<section class="py-12 md:py-16 bg-slate-50/50 px-4 md:px-6">
 
     <div class="max-w-6xl mx-auto">
 
-        <div class="flex justify-between mb-10">
-            <h2 class="text-3xl font-black">Featured</h2>
-            <a href="{% url 'search' %}" class="text-indigo-600 font-bold">View all</a>
+        <div class="flex justify-between items-center mb-8 md:mb-10">
+            <h2 class="text-2xl md:text-3xl font-black font-outfit">Featured</h2>
+            <a href="{% url 'search' %}" class="text-indigo-600 font-bold text-sm">View all</a>
         </div>
 
-        <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
 
             {% for product in featured_products %}
             <a href="{% url 'product_detail' product.id %}" class="bg-white rounded-2xl overflow-hidden shadow hover:shadow-xl transition group">
@@ -76,13 +76,13 @@
                     </div>
                 {% endif %}
 
-                <div class="p-4">
+                <div class="p-3 md:p-4">
 
-                    <h3 class="font-bold text-lg line-clamp-1">
+                    <h3 class="font-bold text-sm md:text-lg line-clamp-1 text-slate-900">
                         {{ product.title }}
                     </h3>
 
-                    <p class="text-indigo-600 font-black mt-2">
+                    <p class="text-indigo-600 font-black mt-1 md:mt-2 text-sm md:text-base">
                         ₹{{ product.price }}
                     </p>
 
@@ -121,9 +121,9 @@
         </div>
 
         <div class="p-6 rounded-2xl bg-white shadow hover:shadow-xl transition">
-            <i data-lucide="truck" class="mx-auto text-indigo-600 w-10 h-10"></i>
-            <h3 class="mt-4 font-bold">Fast Delivery</h3>
-            <p class="text-sm text-gray-500 mt-2">Reliable logistics system.</p>
+            <i data-lucide="map-pin" class="mx-auto text-indigo-600 w-10 h-10"></i>
+            <h3 class="mt-4 font-bold">Direct Meetup</h3>
+            <p class="text-sm text-gray-500 mt-2">Meet the seller & verify quality in person.</p>
         </div>
 
     </div>

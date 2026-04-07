@@ -22,9 +22,25 @@
     }
     .dash-stat-card {
         background: white;
-        border-radius: 32px;
+        border-radius: 24px;
         border: 1px solid #f1f5f9;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @media (max-width: 1023px) {
+        .dash-sidebar {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 1rem !important;
+            gap: 0.5rem !important;
+            border-bottom: 1px solid #f1f5f9;
+            border-right: none !important;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .dash-sidebar::-webkit-scrollbar { display: none; }
+        .dash-sidebar a { padding: 0.75rem 1rem !important; flex-shrink: 0; }
+        .dash-sidebar p { display: none; }
     }
     .dash-stat-card:hover {
         transform: translateY(-4px);
@@ -36,7 +52,7 @@
 {% block content %}
 <div class="dashboard-container max-w-7xl mx-auto w-full">
     <!-- Sidebar -->
-    <aside class="w-full lg:w-72 p-6 lg:p-8 border-r border-slate-100 flex flex-col gap-8 bg-red-100 backdrop-blur-sm">
+    <aside class="dash-sidebar w-full lg:w-72 p-6 lg:p-8 border-r border-slate-100 flex flex-col gap-8 bg-white/50 backdrop-blur-sm shrink-0">
         <div class="space-y-1">
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] px-4 mb-4">Menu</p>
             
@@ -78,15 +94,15 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 p-6 lg:p-12">
+    <main class="flex-1 p-4 md:p-8 lg:p-12">
         <div class="max-w-5xl mx-auto space-y-12">
             <!-- Header -->
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div class="space-y-1">
-                    <h1 class="text-3xl font-bold text-slate-900 tracking-tight font-outfit">Seller Dashboard</h1>
-                    <p class="text-slate-500 font-medium text-sm">Manage your inventory and track your sales performance.</p>
+                    <h1 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight font-outfit">Seller Dashboard</h1>
+                    <p class="text-slate-500 font-medium text-xs md:text-sm">Manage inventory and track sales performance.</p>
                 </div>
-                <a href="{% url 'add_product' %}" class="btn-premium px-8 py-4 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+                <a href="{% url 'add_product' %}" class="btn-premium w-full sm:w-auto px-8 py-4 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2">
                     <i data-lucide="plus" class="w-4 h-4 text-white"></i> Create New Ad
                 </a>
             </div>
@@ -94,13 +110,13 @@
             <!-- Stats -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Total Ads -->
-                <div class="dash-stat-card p-8 flex items-center gap-6">
-                    <div class="h-16 w-16 bg-indigo-50 text-indigo-600 rounded-[1.25rem] flex items-center justify-center shadow-inner">
-                        <i data-lucide="package" class="w-8 h-8"></i>
+                <div class="dash-stat-card p-6 md:p-8 flex items-center gap-4 md:gap-6">
+                    <div class="h-14 w-14 md:h-16 md:w-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center shadow-inner shrink-0">
+                        <i data-lucide="package" class="w-6 h-6 md:w-8 md:h-8"></i>
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Assets</p>
-                        <p class="text-3xl font-bold text-slate-900 font-outfit">{{ products.count }}</p>
+                        <p class="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Assets</p>
+                        <p class="text-2xl md:text-3xl font-bold text-slate-900 font-outfit">{{ products.count }}</p>
                     </div>
                 </div>
 
@@ -130,10 +146,10 @@
             <!-- Ads List -->
             <div class="space-y-8">
                 <div class="flex items-center justify-between px-2">
-                    <h2 class="text-xl font-bold text-slate-900 tracking-tight font-outfit uppercase tracking-widest text-xs">Your Listings</h2>
+                    <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Your Listings</h2>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {% for product in products %}
                     <div class="premium-card bg-white overflow-hidden group border-slate-100" style="border-radius: 32px;">
                         <div class="h-48 overflow-hidden relative">

@@ -61,16 +61,30 @@
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px);
         border: 1px solid #e2e8f0;
-        border-radius: 24px;
+        border-radius: 20px;
         box-shadow: 0 -20px 50px -12px rgba(15, 23, 42, 0.15);
         position: fixed;
-        bottom: 24px;
+        bottom: 16px;
         left: 50%;
         transform: translateX(-50%);
-        width: calc(100% - 48px);
+        width: calc(100% - 24px);
         max-width: 800px;
-        z-index: 50;
+        z-index: 40;
         transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @media (min-width: 768px) {
+        .glimpse-bar {
+            border-radius: 24px;
+            bottom: 24px;
+        }
+    }
+    @media (max-width: 767px) {
+        .glimpse-bar {
+            padding: 0.5rem !important;
+        }
+        .glimpse-bar .h-14 { height: 2.5rem !important; width: 3.5rem !important; }
+        .glimpse-bar .text-xl { font-size: 0.875rem !important; }
+        .glimpse-bar .text-xs { font-size: 0.65rem !important; }
     }
     .media-card {
         background: white;
@@ -84,33 +98,33 @@
 {% block content %}
 <div class="max-w-6xl mx-auto px-6 py-2 lg:py-4">
     <div class="text-center mb-8 space-y-4 animate-in fade-in slide-in-from-top-4 duration-700">
-        <div class="inline-flex items-center gap-3 px-6 py-2 bg-slate-50 text-indigo-600 text-[10px] font-black uppercase tracking-[0.3em] rounded-full border border-slate-100">
+        <div class="inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 bg-slate-50 text-indigo-600 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] rounded-full border border-slate-100">
             Secure Ad Posting
         </div>
-        <h1 class="text-5xl lg:text-7xl font-black text-slate-950 tracking-tighter uppercase font-outfit leading-none">
+        <h1 class="text-4xl md:text-5xl lg:text-7xl font-black text-slate-950 tracking-tighter uppercase font-outfit leading-none">
             Add <span class="premium-text-gradient italic">Product.</span>
         </h1>
         
         <!-- Stepper -->
-        <div class="flex items-center justify-center gap-8 pt-4">
+        <div class="flex items-center justify-center gap-4 md:gap-8 pt-4">
             <div class="flex flex-col items-center gap-2 step-active">
                 <div class="step-dot"></div>
-                <span class="text-[7px] font-black uppercase tracking-[0.2em] text-indigo-600">Details</span>
+                <span class="text-[6px] md:text-[7px] font-black uppercase tracking-[0.2em] text-indigo-600">Details</span>
             </div>
-            <div class="h-[1px] w-8 bg-slate-200"></div>
+            <div class="h-[1px] w-4 md:w-8 bg-slate-200"></div>
             <div class="flex flex-col items-center gap-2">
                 <div class="step-dot"></div>
-                <span class="text-[7px] font-black uppercase tracking-[0.2em] text-slate-400">Spec</span>
+                <span class="text-[6px] md:text-[7px] font-black uppercase tracking-[0.2em] text-slate-400">Spec</span>
             </div>
-            <div class="h-[1px] w-8 bg-slate-200"></div>
+            <div class="h-[1px] w-4 md:w-8 bg-slate-200"></div>
             <div class="flex flex-col items-center gap-2">
                 <div class="step-dot"></div>
-                <span class="text-[7px] font-black uppercase tracking-[0.2em] text-slate-400">Media</span>
+                <span class="text-[6px] md:text-[7px] font-black uppercase tracking-[0.2em] text-slate-400">Media</span>
             </div>
-            <div class="h-[1px] w-8 bg-slate-200"></div>
+            <div class="h-[1px] w-4 md:w-8 bg-slate-200"></div>
             <div class="flex flex-col items-center gap-2">
                 <div class="step-dot"></div>
-                <span class="text-[7px] font-black uppercase tracking-[0.2em] text-slate-400">Finish</span>
+                <span class="text-[6px] md:text-[7px] font-black uppercase tracking-[0.2em] text-slate-400">Finish</span>
             </div>
         </div>
     </div>
@@ -245,11 +259,13 @@
 
                                 <div class="md:col-span-2 space-y-4">
                                     <label class="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Location</label>
-                                    <div class="relative group">
-                                        <i data-lucide="map-pin" class="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
-                                        <input type="text" id="id_location" name="location" value="{{ form.location.value|default:'' }}" placeholder="e.g. Pune, Maharashtra" class="input-registry w-full pl-14 pr-40 py-5 uppercase text-[10px] tracking-widest" required>
+                                    <div class="relative group flex flex-col md:block gap-3">
+                                        <div class="relative flex-1">
+                                            <i data-lucide="map-pin" class="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                                            <input type="text" id="id_location" name="location" value="{{ form.location.value|default:'' }}" placeholder="e.g. Pune, Maharashtra" class="input-registry w-full pl-14 md:pr-40 py-5 uppercase text-[10px] tracking-widest" required>
+                                        </div>
                                         
-                                        <button type="button" id="detect-btn" class="absolute right-3 top-1/2 -translate-y-1/2 h-10 px-5 bg-slate-950 text-white rounded-xl font-black text-[8px] uppercase tracking-widest hover:bg-indigo-600 transition-all flex items-center gap-2 shadow-2xl active:scale-95 group/detect">
+                                        <button type="button" id="detect-btn" class="md:absolute md:right-3 md:top-1/2 md:-translate-y-1/2 h-12 md:h-10 px-5 bg-slate-950 text-white rounded-xl font-black text-[8px] uppercase tracking-widest hover:bg-indigo-600 transition-all flex items-center justify-center gap-2 shadow-2xl active:scale-95 group/detect">
                                             <i data-lucide="locate" class="w-3.5 h-3.5 group-hover/detect:scale-110 transition-transform"></i> Detect Location
                                         </button>
                                     </div>
