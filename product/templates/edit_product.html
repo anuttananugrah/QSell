@@ -38,6 +38,17 @@
         background-color: #ffffff;
         color: #0f172a;
     }
+    .media-staged-zone {
+        border: 2px dashed #cbd5e1;
+        border-radius: 32px;
+        transition: all 0.4s ease;
+        background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent);
+    }
+    .media-staged-zone:hover {
+        border-color: #6366f1;
+        background: #f8fafc;
+        box-shadow: 0 30px 60px -15px rgba(99, 102, 241, 0.15);
+    }
 </style>
 {% endblock %}
 
@@ -233,6 +244,32 @@
                 </div>
             </div>
 
+            <hr class="border-slate-50">
+
+            <!-- Media Visual Assets Row -->
+            <div class="space-y-8">
+                <div class="flex items-center gap-5">
+                    <div class="h-12 w-12 registry-icon-box rounded-2xl flex items-center justify-center shadow-xl shadow-slate-200/50">
+                        <i data-lucide="camera" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-sm font-black text-slate-950 font-outfit uppercase tracking-[0.3em]">Photos</h3>
+                </div>
+
+                <div class="relative group">
+                    <input type="file" name="images" id="media_upload" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20">
+                    <div class="media-staged-zone p-10 flex flex-col items-center justify-center text-center space-y-4 group-hover:bg-slate-50/50 transition-all duration-700">
+                        <div class="h-16 w-16 bg-white border border-slate-100 rounded-[2rem] flex items-center justify-center text-indigo-600 shadow-xl group-hover:scale-110 transition-all duration-500">
+                            <i data-lucide="plus" class="w-8 h-8"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="font-black text-slate-950 font-outfit uppercase tracking-[0.2em] text-[10px]">Add More Photos</h4>
+                            <p class="text-[8px] text-slate-400 font-bold uppercase tracking-widest opacity-60">Upload additional images for your product listing.</p>
+                        </div>
+                        <div id="preview-container" class="flex flex-wrap items-center justify-center gap-4 pt-4"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Update Trigger -->
             <div class="pt-12 flex flex-col sm:flex-row items-center gap-8">
                 <button type="submit" class="w-full sm:flex-1 bg-slate-950 hover:bg-indigo-600 text-white py-7 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.4em] flex items-center justify-center gap-4 transition-all shadow-2xl active:scale-95 group">
@@ -247,6 +284,29 @@
 <!-- Registry Middleware Scripts -->
 <script>
     lucide.createIcons();
+
+    // Media Preview Logic
+    const fileInput = document.getElementById('media_upload');
+    const previewContainer = document.getElementById('preview-container');
+
+    if (fileInput) {
+        fileInput.addEventListener('change', () => {
+            previewContainer.innerHTML = '';
+            if (fileInput.files.length > 0) {
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    const file = fileInput.files[i];
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const div = document.createElement('div');
+                        div.className = 'h-16 w-16 rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-lg animate-in zoom-in-75 duration-500';
+                        div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                        previewContainer.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+    }
 
     // Utilization Logic
     const categorySelect = document.getElementById('id_category');

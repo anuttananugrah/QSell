@@ -59,6 +59,11 @@ class EditProductView(LoginRequiredMixin, View):
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             form.save()
+            
+            images = request.FILES.getlist('images')
+            for image in images:
+                ProductImage.objects.create(product=product, image=image)
+
             messages.success(request, "Product updated successfully.")
             return redirect("my_ads")
         return render(request, "edit_product.html", {'form': form, 'product': product})
