@@ -18,12 +18,14 @@
 
     <!-- Search -->
     <form action="{% url 'search' %}" method="GET"
-        class="mt-10 max-w-3xl mx-auto flex shadow-xl rounded-full overflow-hidden border">
+        class="mt-10 max-w-3xl mx-auto flex shadow-xl rounded-full overflow-hidden bg-white border border-slate-200">
 
-        <input type="text" name="q" placeholder="Search products..." class="flex-1 px-6 py-4 outline-none">
+        <input type="text" name="q" placeholder="Search products..." 
+            class="flex-1 px-4 md:px-6 py-3 md:py-4 outline-none text-sm md:text-base">
 
-        <button class="bg-indigo-600 text-white px-8 font-bold hover:bg-indigo-700 transition">
-            Search
+        <button class="bg-indigo-600 text-white px-5 md:px-8 font-bold hover:bg-indigo-700 transition flex items-center justify-center">
+            <i data-lucide="search" class="w-5 h-5 md:hidden"></i>
+            <span class="hidden md:inline">Search</span>
         </button>
     </form>
 
