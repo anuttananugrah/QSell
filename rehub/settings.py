@@ -183,16 +183,11 @@ LOGIN_URL = 'loginpage'
 
 
 
-# ... (at the very bottom)
 
-# settings.py
-
-# This will pull 'anymail.backends.brevo.EmailBackend' from Railway
-EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 
 ANYMAIL = {
-    "BREVO_API_KEY": config("BREVO_API_KEY"),
+    "BREVO_API_KEY": config("BREVO_API_KEY", default="build-placeholder"),
 }
 
-# This MUST be the email address you registered with Brevo
 DEFAULT_FROM_EMAIL = "anuttananugrah@gmail.com"
