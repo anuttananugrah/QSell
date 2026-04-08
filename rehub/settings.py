@@ -185,14 +185,14 @@ LOGIN_URL = 'loginpage'
 
 # ... (at the very bottom)
 
-import os
+# settings.py
 
-# This tells Django to use the Resend API instead of SMTP
-EMAIL_BACKEND = "anymail.backends.resend.EmailBackend" 
+# This will pull 'anymail.backends.brevo.EmailBackend' from Railway
+EMAIL_BACKEND = config('EMAIL_BACKEND')
 
 ANYMAIL = {
-    "RESEND_API_KEY": config("RESEND_API_KEY"), # Use config() since you're using decouple
+    "BREVO_API_KEY": config("BREVO_API_KEY"),
 }
 
-# On Resend's free tier, this MUST be exactly this value
-DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
+# This MUST be the email address you registered with Brevo
+DEFAULT_FROM_EMAIL = "anuttananugrah@gmail.com"
