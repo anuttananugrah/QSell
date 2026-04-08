@@ -1,6 +1,6 @@
 
 from django.urls import path
-from product.views import CategoryProductListView
+from categories.views import CategoryProductListView
 from . import views
 
 
