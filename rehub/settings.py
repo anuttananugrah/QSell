@@ -65,6 +65,7 @@ CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config('CLOUD_NAME', default=''),
     'API_KEY': config('API_KEY', default=''),
     'API_SECRET': config('API_SECRET', default=''),
+    'SECURE': True,
 }
 
 MIDDLEWARE = [
