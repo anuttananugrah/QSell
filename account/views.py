@@ -32,7 +32,6 @@ class HomeView(View):
             ('watch', 'Watch', 'watch'),
             ('home', 'Home', 'home'),
             ('books', 'Books', 'book-open'),
-            ('health', 'Health', 'heart'),
         ]
 
         unread_count = 0

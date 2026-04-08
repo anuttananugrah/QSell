@@ -15,7 +15,6 @@ class Category(models.Model):
         ('bikes', 'Bikes'),
         ('watch', 'Watch'),
         ('books', 'Books'),
-
     ]
 
     name = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
