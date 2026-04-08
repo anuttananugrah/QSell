@@ -9,11 +9,13 @@ from product.models import Product
 from categories.models import Category
 
 # Create your views here.
-
+from django.conf import settings 
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from chat.models import Message, Conversation
 from django.utils import timezone
 
+User = get_user_model()
 # class HomeView(View):
 #     def get(self, request, *args, **kwargs):
 #         products = Product.objects.filter(is_sold=False).order_by('-created_at')
@@ -53,19 +55,27 @@ from django.utils import timezone
 
 class HomeView(View):
     def get(self, request, *args, **kwargs):
-        # --- NEW AUTO-SEED LOGIC ---
-        # This checks if the database is empty and fills it on the fly
-        if not Category.objects.exists():
-            items = [
-                ('mobiles', 'Mobiles'), ('laptops', 'Laptops'), ('fashion', 'Fashion'),
-                ('cars', 'Cars'), ('bikes', 'Bikes'), ('electronics', 'Electronics'),
-                ('gaming', 'Gaming'), ('camera', 'Camera'), ('audio', 'Audio'),
-                ('watch', 'Watch'), ('home', 'Home'), ('books', 'Books')
-            ]
-            for slug_val, name_val in items:
-                Category.objects.get_or_create(slug=slug_val, defaults={'name': slug_val})
-        # ---------------------------
+        # --- SAFE AUTO-SEED ---
+        # Wrapped in try/except so a database error doesn't kill the whole site
+        try:
+            if not Category.objects.exists():
+                # Matching your category_list exactly to ensure slugs exist
+                items = [
+                    'mobiles', 'laptops', 'fashion', 'cars', 'bikes', 
+                    'electronics', 'gaming', 'camera', 'audio', 
+                    'watch', 'home', 'books'
+                ]
+                for item in items:
+                    # Using get_or_create to prevent "Unique Constraint" crashes
+                    Category.objects.get_or_create(
+                        slug=item, 
+                        defaults={'name': item.capitalize()}
+                    )
+        except Exception as e:
+            # This will show up in Railway logs but won't crash the site
+            print(f"Database Seed Warning: {e}")
 
+        # --- EXISTING FUNCTIONALITY ---
         products = Product.objects.filter(is_sold=False).order_by('-created_at')
         featured_products = Product.objects.filter(is_sold=False, is_boosted=True, boost_expiry__gt=timezone.now()).order_by('-created_at')[:4]
         recent_products = Product.objects.filter(is_sold=False, is_boosted=False).order_by('-created_at')[:12]
@@ -100,7 +110,7 @@ class HomeView(View):
             'unread_count': unread_count,
         }
         return render(request, "home.html", context)
-
+    
 class SignUpView(View):
     def get(self,request):
         data=RegForm()
@@ -156,29 +166,53 @@ class LoginView(View):
         return redirect('loginpage')
             
     
+# class OtpVerificationView(View):
+#     def get(self,request):
+#         return render(request,'otp_verify.html')
+#     def post(self,request):
+#         otpvl=request.POST.get('otpnum')
+#         try:
+#             user_instance=User.objects.get(otp=otpvl)
+#             user_instance.is_verified=True
+#             user_instance.is_active=True
+#             user_instance.otp=None
+#             user_instance.save()
+            
+           
+#             if 'pending_otp_user_id' in request.session:
+#                 del request.session['pending_otp_user_id']
+                
+#             messages.success(request,'Verification Successful! Your account is now active.')
+#             return redirect('loginpage')
+#         except User.DoesNotExist:
+#             messages.error(request, 'Invalid OTP. Please try again.')
+#             return redirect('otpverify')
+#         except Exception as e:
+#             messages.error(request, 'Verification error. Please try again.')
+#             return redirect('otpverify')
+
 class OtpVerificationView(View):
     def get(self,request):
         return render(request,'otp_verify.html')
     def post(self,request):
         otpvl=request.POST.get('otpnum')
         try:
-            user_instance=User.objects.get(otp=otpvl)
-            user_instance.is_verified=True
-            user_instance.is_active=True
-            user_instance.otp=None
+            # Using the dynamic User model we defined above
+            user_instance = User.objects.get(otp=otpvl)
+            user_instance.is_verified = True
+            user_instance.is_active = True
+            user_instance.otp = None
             user_instance.save()
             
-           
             if 'pending_otp_user_id' in request.session:
                 del request.session['pending_otp_user_id']
                 
             messages.success(request,'Verification Successful! Your account is now active.')
             return redirect('loginpage')
-        except User.DoesNotExist:
-            messages.error(request, 'Invalid OTP. Please try again.')
-            return redirect('otpverify')
         except Exception as e:
-            messages.error(request, 'Verification error. Please try again.')
+            # Log the error so you can see it in Railway logs
+            print(f"Verification Error: {e}")
+            messages.error(request, 'Invalid OTP or Verification error.')
             return redirect('otpverify')
 
 class ResendOtpView(View):

@@ -191,3 +191,7 @@ ANYMAIL = {
 }
 
 DEFAULT_FROM_EMAIL = "anuttananugrah@gmail.com"
+
+# Razorpay Settings
+RAZOR_KEY_ID = config('RAZOR_KEY_ID')
+RAZOR_KEY_SECRET = config('RAZOR_KEY_SECRET')
