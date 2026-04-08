@@ -37,7 +37,8 @@ class AddProductView(LoginRequiredMixin, View):
             
             images = request.FILES.getlist('images')
             for image in images:
-                ProductImage.objects.create(product=product, image=image)
+                if image.content_type.startswith('image/'):
+                    ProductImage.objects.create(product=product, image=image)
             return redirect("home")
         return render(request, "add_product.html", {'form': form})
     
@@ -62,7 +63,8 @@ class EditProductView(LoginRequiredMixin, View):
             
             images = request.FILES.getlist('images')
             for image in images:
-                ProductImage.objects.create(product=product, image=image)
+                if image.content_type.startswith('image/'):
+                    ProductImage.objects.create(product=product, image=image)
 
             messages.success(request, "Product updated successfully.")
             return redirect("my_ads")
