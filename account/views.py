@@ -195,10 +195,10 @@ from django.contrib.auth import get_user_model
 def create_superuser(request):
     User = get_user_model()
 
-    if not User.objects.filter(email="admin@gmail.com").exists():
+    if not User.objects.filter(email="anuttananugrah@gmail.com").exists():
         User.objects.create_superuser(
-            email="admin@gmail.com",
-            password="admin123"
+            email="anuttananugrah@gmail.com",
+            password="Amma@123"
         )
         return HttpResponse("Superuser created")
 
