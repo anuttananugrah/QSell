@@ -10,5 +10,4 @@ urlpatterns = [
     path('profile', ProfileView.as_view(), name='profile'),
     path('edit-profile', EditProfileView.as_view(), name='edit_profile'),
     path('resend-otp', ResendOtpView.as_view(), name='resendotp'),
-    path('create-superuser/', create_superuser),
 ]
