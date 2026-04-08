@@ -6,6 +6,7 @@ from account.forms import *
 from django.contrib.auth import authenticate,login,logout
 from mail_manage.utils import send_account_otp
 from product.models import Product
+from categories.models import Category
 
 # Create your views here.
 
