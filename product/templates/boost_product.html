@@ -137,7 +137,15 @@
             btn.disabled = true;
             btn.innerText = "Processing...";
 
-            fetch("{% url 'create_boost' product.id %}")
+            fetch("{% url 'create_boost' product.id %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCSRFToken()
+                },
+                credentials: "same-origin",   // 🔥 ADD THIS
+                
+            })
                 .then(res => res.json())
                 .then(data => {
 

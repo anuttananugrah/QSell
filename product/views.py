@@ -179,12 +179,15 @@ class SearchView(View):
         }
         return render(request, "product_listing.html", context)
     
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+import traceback
 
-class CreateBoostOrderView(View):
-
-    def get(self, request, product_id):
+@method_decorator(csrf_exempt, name='dispatch')
+class CreateBoostOrderView(LoginRequiredMixin,View):
+    def post(self, request, product_id):
         try:
-            product = Product.objects.get(id=product_id)
+            product = get_object_or_404(Product, id=product_id)
 
             client = razorpay.Client(
                 auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
@@ -217,6 +220,8 @@ class CreateBoostOrderView(View):
             })
 
         except Exception as e:
+            print("ERROR:", str(e))
+            print(traceback.format_exc())
             return JsonResponse({"error": str(e)}, status=400)
         
 @method_decorator(csrf_exempt, name='dispatch')
