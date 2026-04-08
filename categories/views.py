@@ -11,3 +11,8 @@ class CategoryProductListView(View):
             'products': products,
             'category': category
         })
+    
+from django.http import HttpResponse
+
+def payment_success(request):
+    return HttpResponse("Payment Successful")
