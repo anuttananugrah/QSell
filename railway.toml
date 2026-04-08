@@ -2,4 +2,4 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "python manage.py migrate && gunicorn rehub.wsgi:application --workers 1 --threads 2 --timeout 120"
+startCommand = "gunicorn rehub.wsgi:application --workers 1 --threads 2 --timeout 120"
