@@ -2,4 +2,8 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "python manage.py migrate --run-syncdb && gunicorn rehub.wsgi:application --workers 1 --threads 2 --timeout 120"
+# This runs once before the app starts. If it fails, the old version stays live.
+releaseCommand = "python manage.py migrate"
+
+# This only runs the web server
+startCommand = "gunicorn rehub.wsgi:application --workers 1 --threads 2 --timeout 120"
