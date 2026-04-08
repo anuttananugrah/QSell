@@ -13,8 +13,58 @@ from django.db.models import Q
 from chat.models import Message, Conversation
 from django.utils import timezone
 
+# class HomeView(View):
+#     def get(self, request, *args, **kwargs):
+#         products = Product.objects.filter(is_sold=False).order_by('-created_at')
+#         featured_products = Product.objects.filter(is_sold=False, is_boosted=True, boost_expiry__gt=timezone.now()).order_by('-created_at')[:4]
+#         recent_products = Product.objects.filter(is_sold=False, is_boosted=False).order_by('-created_at')[:12]
+        
+#         category_list = [
+#             ('mobiles', 'Mobiles', 'smartphone'),
+#             ('laptops', 'Laptops', 'laptop'),
+#             ('fashion', 'Fashion', 'shirt'),
+#             ('cars', 'Cars', 'car'),
+#             ('bikes', 'Bikes', 'bike'),
+#             ('electronics', 'Electronics', 'monitor'),
+#             ('gaming', 'Gaming', 'gamepad'),
+#             ('camera', 'Camera', 'camera'),
+#             ('audio', 'Audio', 'headphones'),
+#             ('watch', 'Watch', 'watch'),
+#             ('home', 'Home', 'home'),
+#             ('books', 'Books', 'book-open'),
+#         ]
+
+#         unread_count = 0
+#         if request.user.is_authenticated:
+#             unread_count = Message.objects.filter(
+#                 Q(conversation__buyer=request.user) | Q(conversation__seller=request.user),
+#                 is_read=False
+#             ).exclude(sender=request.user).count()
+            
+#         context = {
+#             'products': products,
+#             'featured_products': featured_products,
+#             'recent_products': recent_products,
+#             'category_list': category_list,
+#             'unread_count': unread_count,
+#         }
+#         return render(request, "home.html", context)
+
 class HomeView(View):
     def get(self, request, *args, **kwargs):
+        # --- NEW AUTO-SEED LOGIC ---
+        # This checks if the database is empty and fills it on the fly
+        if not Category.objects.exists():
+            items = [
+                ('mobiles', 'Mobiles'), ('laptops', 'Laptops'), ('fashion', 'Fashion'),
+                ('cars', 'Cars'), ('bikes', 'Bikes'), ('electronics', 'Electronics'),
+                ('gaming', 'Gaming'), ('camera', 'Camera'), ('audio', 'Audio'),
+                ('watch', 'Watch'), ('home', 'Home'), ('books', 'Books')
+            ]
+            for slug_val, name_val in items:
+                Category.objects.get_or_create(slug=slug_val, defaults={'name': slug_val})
+        # ---------------------------
+
         products = Product.objects.filter(is_sold=False).order_by('-created_at')
         featured_products = Product.objects.filter(is_sold=False, is_boosted=True, boost_expiry__gt=timezone.now()).order_by('-created_at')[:4]
         recent_products = Product.objects.filter(is_sold=False, is_boosted=False).order_by('-created_at')[:12]
