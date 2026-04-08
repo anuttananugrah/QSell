@@ -32,9 +32,8 @@ def remove_categories(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        # This tells Django to run after your 0002 migration
-        ('categories', '0002_category_slug_alter_category_icon_and__more'), 
-    ]
+    ('categories', '0004_alter_category_name'), # Point to the very last file in your migrations folder
+]
 
     operations = [
         migrations.RunPython(create_categories, remove_categories),
