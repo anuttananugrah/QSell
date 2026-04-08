@@ -37,15 +37,14 @@ ALLOWED_HOSTS = ['*']
 # EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 # Application definition
+
 INSTALLED_APPS = [
-    'cloudinary_storage',       # 1. Must be BEFORE staticfiles
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', # 2. Staticfiles comes after
-    'cloudinary',               # 3. Cloudinary itself
+    'django.contrib.staticfiles',
     'razorpay',
     'account',
     'categories',
@@ -55,6 +54,8 @@ INSTALLED_APPS = [
     'whishlist',
     'custom_admin',
     'mail_manage',
+    'cloudinary',
+    'cloudinary_storage',
     'anymail'
 ]
 
@@ -190,7 +191,3 @@ ANYMAIL = {
 }
 
 DEFAULT_FROM_EMAIL = "anuttananugrah@gmail.com"
-
-# Razorpay Settings
-RAZOR_KEY_ID = config('RAZOR_KEY_ID')
-RAZOR_KEY_SECRET = config('RAZOR_KEY_SECRET')
