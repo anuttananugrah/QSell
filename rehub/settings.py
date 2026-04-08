@@ -28,13 +28,13 @@ if not DEBUG:
 ALLOWED_HOSTS = ['*']
 
 
-EMAIL_BACKEND = config('EMAIL_BACKEND')
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+# EMAIL_BACKEND = config('EMAIL_BACKEND')
+# EMAIL_HOST = config('EMAIL_HOST')
+# EMAIL_PORT = config('EMAIL_PORT', cast=int)
+# EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+# DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 # Application definition
 
@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'custom_admin',
     'mail_manage',
     'cloudinary',
-    'cloudinary_storage'
+    'cloudinary_storage',
+    'anymail'
 ]
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
@@ -182,3 +183,16 @@ LOGIN_URL = 'loginpage'
 
 
 
+# ... (at the very bottom)
+
+import os
+
+# This tells Django to use the Resend API instead of SMTP
+EMAIL_BACKEND = "anymail.backends.resend.EmailBackend" 
+
+ANYMAIL = {
+    "RESEND_API_KEY": config("RESEND_API_KEY"), # Use config() since you're using decouple
+}
+
+# On Resend's free tier, this MUST be exactly this value
+DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
