@@ -187,19 +187,3 @@ class EditProfileView(View):
             'profile_form': profile_form
         })
     
-# create superuser
-
-from django.http import HttpResponse
-from django.contrib.auth import get_user_model
-
-def create_superuser(request):
-    User = get_user_model()
-
-    if not User.objects.filter(email="anuttananugrah@gmail.com").exists():
-        User.objects.create_superuser(
-            email="anuttananugrah@gmail.com",
-            password="Amma@123"
-        )
-        return HttpResponse("Superuser created")
-
-    return HttpResponse("Superuser already exists")
