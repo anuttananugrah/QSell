@@ -39,11 +39,13 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary',
     'django.contrib.staticfiles',
     'razorpay',
     'account',
@@ -54,8 +56,6 @@ INSTALLED_APPS = [
     'whishlist',
     'custom_admin',
     'mail_manage',
-    'cloudinary',
-    'cloudinary_storage',
     'anymail'
 ]
 
@@ -198,3 +198,13 @@ DEFAULT_FROM_EMAIL = "anuttananugrah@gmail.com"
 
 RAZORPAY_KEY_ID = config("RAZORPAY_KEY_ID", default="")
 RAZORPAY_KEY_SECRET = config("RAZORPAY_KEY_SECRET", default="")
+
+import cloudinary
+
+# This is the missing piece that fixes the ValueError
+cloudinary.config( 
+  cloud_name = config('CLOUD_NAME'), 
+  api_key = config('API_KEY'), 
+  api_secret = config('API_SECRET'),
+  secure = True
+)
