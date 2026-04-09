@@ -57,7 +57,7 @@
     </div>
 
     <!-- Product Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-8">
         {% for product in products %}
         <div class="registry-card group overflow-hidden">
             <a href="{% url 'product_detail' product.id %}" class="block">
@@ -67,39 +67,39 @@
                         <img src="{{ product.images.first.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-1000">
                     {% else %}
                         <div class="w-full h-full flex items-center justify-center text-slate-200">
-                            <i data-lucide="image" class="w-16 h-16 opacity-30"></i>
+                            <i data-lucide="image" class="w-12 h-12 md:w-16 md:h-16 opacity-30"></i>
                         </div>
                     {% endif %}
 
                     <!-- Condition Badge -->
-                    <div class="absolute top-5 left-5 flex flex-col gap-2">
-                        <span class="bg-white/90 backdrop-blur px-4 py-2 text-[9px] font-black uppercase tracking-widest text-slate-900 rounded-xl shadow-lg border border-slate-100">
+                    <div class="absolute top-3 left-3 md:top-5 md:left-5 flex flex-col gap-1 md:gap-2">
+                        <span class="bg-white/90 backdrop-blur px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-[9px] font-black uppercase tracking-widest text-slate-900 rounded-lg md:rounded-xl shadow-lg border border-slate-100 w-fit">
                             {{ product.condition }}
                         </span>
-                        <span class="bg-indigo-600 px-4 py-2 text-[9px] font-black uppercase tracking-widest text-white rounded-xl shadow-lg border border-indigo-500 w-fit">
+                        <span class="bg-indigo-600 px-2 py-1 md:px-4 md:py-2 text-[8px] md:text-[9px] font-black uppercase tracking-widest text-white rounded-lg md:rounded-xl shadow-lg border border-indigo-500 w-fit">
                             {{ product.year }}
                         </span>
                     </div>
 
                     {% if product.is_boosted %}
-                    <div class="absolute top-5 right-5 h-10 w-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-2xl shadow-indigo-600/30">
-                        <i data-lucide="zap" class="w-5 h-5 text-white fill-current"></i>
+                    <div class="absolute top-3 right-3 md:top-5 md:right-5 h-8 w-8 md:h-10 md:w-10 bg-indigo-600 rounded-lg md:rounded-xl flex items-center justify-center shadow-2xl shadow-indigo-600/30">
+                        <i data-lucide="zap" class="w-4 h-4 md:w-5 md:h-5 text-white fill-current"></i>
                     </div>
                     {% endif %}
                 </div>
 
                 <!-- Product Info -->
-                <div class="p-8 space-y-6">
-                    <div class="flex items-center gap-2 text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                        <i data-lucide="map-pin" class="w-4 h-4 text-indigo-500/50"></i>
-                        <span>{{ product.location|truncatechars:12 }}</span>
+                <div class="p-4 md:p-8 space-y-3 md:space-y-6">
+                    <div class="flex items-center gap-1 md:gap-2 text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] line-clamp-1">
+                        <i data-lucide="map-pin" class="w-3 h-3 md:w-4 md:h-4 text-indigo-500/50 flex-shrink-0"></i>
+                        <span class="truncate">{{ product.location }}</span>
                     </div>
                     
-                    <h3 class="font-bold text-slate-900 text-lg line-clamp-1 group-hover:text-indigo-600 transition-colors tracking-tight uppercase">{{ product.title }}</h3>
+                    <h3 class="font-bold text-slate-900 text-sm md:text-lg line-clamp-1 group-hover:text-indigo-600 transition-colors tracking-tight uppercase">{{ product.title }}</h3>
                     
-                    <div class="flex items-end justify-between pt-6 border-t border-slate-50">
-                        <p class="text-2xl font-black text-slate-950 italic tracking-tighter">₹{{ product.price }}</p>
-                        <span class="text-[9px] font-black text-slate-300 uppercase tracking-widest">{{ product.created_at|timesince }}</span>
+                    <div class="flex items-end justify-between pt-3 md:pt-6 border-t border-slate-50">
+                        <p class="text-base md:text-2xl font-black text-slate-950 italic tracking-tighter">₹{{ product.price }}</p>
+                        <span class="text-[8px] md:text-[9px] font-black text-slate-300 uppercase tracking-widest hidden sm:inline-block">{{ product.created_at|timesince }}</span>
                     </div>
                 </div>
             </a>
