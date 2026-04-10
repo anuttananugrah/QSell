@@ -179,10 +179,10 @@
             </div>
         </div>
 
-        <!-- Right: Seller Console (Desktop) -->
-        <div class="hidden lg:flex lg:col-span-4 flex-col gap-6 sticky top-24">
+        <!-- Right: Seller Console -->
+        <div class="flex lg:col-span-4 flex-col gap-6 lg:sticky lg:top-24">
             <!-- Price Console -->
-            <div class="asset-card p-8 space-y-8 bg-slate-950 text-white border-none shadow-2xl shadow-indigo-900/20">
+            <div class="hidden lg:block asset-card p-8 space-y-8 bg-slate-950 text-white border-none shadow-2xl shadow-indigo-900/20">
                 <div class="space-y-2">
                     <p class="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400">Seller Price</p>
                     <p class="text-5xl font-black font-outfit tracking-tighter italic">₹{{ product.price }}</p>
@@ -230,7 +230,7 @@
             </div>
 
             <!-- Seller Details -->
-            <div class="asset-card p-10 space-y-10">
+            <div class="asset-card p-6 md:p-10 space-y-6 md:space-y-10">
                 <div class="flex items-center gap-6">
                     <div class="h-20 w-20 rounded-3xl bg-slate-50 flex items-center justify-center overflow-hidden border border-slate-100 shadow-inner group/avatar">
                         {% if product.seller.userprofile.profile_image %}
