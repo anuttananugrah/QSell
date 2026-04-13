@@ -142,6 +142,10 @@ class LoginView(View):
                     messages.warning(request, 'Account not verified. A fresh OTP has been sent to your email.')
                     return redirect('otpverify')
                 
+                if not user.is_active:
+                    messages.error(request, 'Your account has been suspended. Please contact customer support.')
+                    return redirect('loginpage')
+                
                 login(request,user)
                 messages.success(request,'Login Successful. Welcome back!')
                 if user.is_superuser:

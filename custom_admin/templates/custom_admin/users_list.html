@@ -15,8 +15,8 @@
                 <th class="px-6 py-4">User</th>
                 <th class="px-6 py-4">Email</th>
                 <th class="px-6 py-4">Joined Date</th>
-                <!-- <th class="px-6 py-4">Status</th> -->
-                <!-- <th class="px-6 py-4 text-right">Actions</th> -->
+                <th class="px-6 py-4">Status</th>
+                <th class="px-6 py-4 text-right">Actions</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
@@ -30,7 +30,7 @@
                 </td>
                 <td class="px-6 py-4 text-sm text-slate-600">{{ u.email }}</td>
                 <td class="px-6 py-4 text-sm text-slate-600">{{ u.date_joined|date:"M d, Y" }}</td>
-                <!-- <td class="px-6 py-4">
+                <td class="px-6 py-4">
                     {% if u.is_active %}
                         <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider">Active</span>
                     {% else %}
@@ -41,7 +41,7 @@
                     <a href="{% url 'custom_admin:toggle_user_status' u.id %}" class="inline-block text-xs font-bold px-4 py-2 border rounded-lg transition-colors {% if u.is_active %}border-rose-200 text-rose-600 hover:bg-rose-50{% else %}border-emerald-200 text-emerald-600 hover:bg-emerald-50{% endif %}">
                         {% if u.is_active %}Block{% else %}Unblock{% endif %}
                     </a>
-                </td> -->
+                </td>
             </tr>
             {% empty %}
             <tr>
