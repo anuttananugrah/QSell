@@ -125,6 +125,10 @@
                         <p class="text-base font-bold text-slate-700">{{ user.userprofile.location|default:"Mumbai, Maharashtra" }}</p>
                     </div>
                     <div>
+                        <p class="info-label">Full Address</p>
+                        <p class="text-base font-bold text-slate-700">{{ user.address|default:"Not provided" }}</p>
+                    </div>
+                    <div>
                         <p class="info-label">Account Status</p>
                         <div class="flex items-center gap-2">
                              <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>

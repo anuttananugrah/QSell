@@ -3,16 +3,18 @@ from django.contrib import messages
 from django.views import View
 from account.models import *
 from account.forms import *
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
 from mail_manage.utils import send_account_otp
 from product.models import Product
 from categories.models import Category
-
-# Create your views here.
-
 from django.db.models import Q
 from chat.models import Message, Conversation
 from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+# Create your views here.
+
 
 # class HomeView(View):
 #     def get(self, request, *args, **kwargs):
@@ -228,12 +230,54 @@ class EditProfileView(View):
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = UserProfileForm(request.POST, request.FILES, instance=request.user.userprofile)
         if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
+            user = user_form.save()
             profile_form.save()
+            update_session_auth_hash(request, user)
+            
+            new_email = user_form.cleaned_data.get('new_email')
+            if new_email and new_email != request.user.email:
+                request.session['pending_new_email'] = new_email
+                send_account_otp(user, custom_email=new_email)
+                messages.info(request, f'Verification OTP sent to {new_email}. Please verify.')
+                return redirect('change_email_otp')
+                
             messages.success(request, 'Profile updated successfully!')
             return redirect('profile')
         return render(request, 'edit_profile.html', {
             'user_form': user_form,
             'profile_form': profile_form
         })
-    
+
+class ChangeEmailOtpView(LoginRequiredMixin, View):
+    def get(self, request):
+        if 'pending_new_email' not in request.session:
+            messages.error(request, 'No pending email change found.')
+            return redirect('profile')
+        return render(request, 'change_email_otp.html', {'email': request.session['pending_new_email']})
+
+    def post(self, request):
+        if 'pending_new_email' not in request.session:
+            messages.error(request, 'No pending email change found.')
+            return redirect('profile')
+            
+        otp = request.POST.get('otp')
+        new_email = request.session['pending_new_email']
+        
+        if otp == request.user.otp:
+            if User.objects.filter(email=new_email).exclude(pk=request.user.pk).exists():
+                messages.error(request, "This email is already in use.")
+                return redirect('profile')
+                
+            request.user.email = new_email
+            request.user.username = new_email
+            request.user.otp = None
+            request.user.save()
+            
+            update_session_auth_hash(request, request.user)
+            del request.session['pending_new_email']
+            
+            messages.success(request, f'Email successfully updated to {new_email}!')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Invalid OTP. Please try again.')
+            return render(request, 'change_email_otp.html', {'email': new_email})

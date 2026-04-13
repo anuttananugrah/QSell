@@ -8,6 +8,7 @@ urlpatterns = [
     path('sell/', AddProductView.as_view(), name="add_product"),
     path('edit/<int:pk>/', EditProductView.as_view(), name="edit_product"),
     path('delete/<int:pk>/', DeleteProductView.as_view(), name="delete_product"),
+    path('sold/<int:pk>/', MarkAsSoldView.as_view(), name="mark_as_sold"),
     path('my-ads/', MyAdsView.as_view(), name="my_ads"),
     path('search/', SearchView.as_view(), name="search"),
     path('boost/<int:pk>/', BoostProductView.as_view(), name="boost_product"),

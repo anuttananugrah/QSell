@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from account.models import User
 
-def send_account_otp(user_instance):
+def send_account_otp(user_instance, custom_email=None):
     """Generates and sends an OTP for account verification."""
     user_instance.generate_otp()
     otp = user_instance.otp
@@ -10,7 +10,7 @@ def send_account_otp(user_instance):
     subject = 'QSell - Verify Your Account'
     message = f'Welcome to QSell! Your verification code is: {otp}'
     from_email = settings.DEFAULT_FROM_EMAIL
-    recipient_list = [user_instance.email]
+    recipient_list = [custom_email if custom_email else user_instance.email]
     print("OTP function triggered")
     
     try:

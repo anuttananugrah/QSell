@@ -25,6 +25,7 @@ class CustomUserManger(BaseUserManager):
 class User(AbstractUser):
     username=None
     email=models.EmailField(max_length=200, unique=True)
+    address=models.CharField(max_length=1000,null=True,blank=True)
     is_verified=models.BooleanField(default=False)
     otp=models.CharField(max_length=10,null=True,blank=True)
     objects=CustomUserManger()

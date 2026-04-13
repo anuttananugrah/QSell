@@ -77,6 +77,14 @@ class DeleteProductView(LoginRequiredMixin, View):
         messages.success(request, "Product deleted successfully.")
         return redirect("my_ads")
 
+class MarkAsSoldView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        product = get_object_or_404(Product, id=pk, seller=request.user)
+        product.is_sold = True
+        product.save()
+        messages.success(request, f"'{product.title}' has been marked as sold.")
+        return redirect("my_ads")
+
 class MyAdsView(LoginRequiredMixin, View):
     def get(self, request):
         products = Product.objects.filter(seller=request.user)

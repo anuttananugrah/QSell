@@ -123,30 +123,37 @@
                     </div>
                 </div>
                 <div class="space-y-3">
-                    <div class="flex gap-3">
+                    {% if product.is_sold %}
+                         <div class="w-full bg-rose-500/10 py-5 rounded-xl text-center space-y-1 border border-rose-500/20">
+                              <p class="text-[10px] font-black text-rose-500 uppercase tracking-[0.4em]">Sold Out</p>
+                              <p class="text-[9px] text-rose-400 font-bold uppercase tracking-widest">No longer available</p>
+                         </div>
+                    {% else %}
+                        <div class="flex gap-3">
+                            {% if user != product.seller %}
+                                <a href="{% url 'start_chat' product.id %}" class="flex-1 bg-indigo-600 text-white py-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] text-center shadow-xl flex items-center justify-center">Quick Chat</a>
+                                <button onclick="document.getElementById('negotiate-modal').classList.remove('hidden')" class="flex-1 bg-white/10 text-white border border-white/20 py-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] flex items-center justify-center">Negotiate</button>
+                            {% else %}
+                                <a href="{% url 'edit_product' product.id %}" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] text-center shadow-xl flex items-center justify-center">Manage Ad</a>
+                            {% endif %}
+                        </div>
                         {% if user != product.seller %}
-                            <a href="{% url 'start_chat' product.id %}" class="flex-1 bg-indigo-600 text-white py-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] text-center shadow-xl flex items-center justify-center">Quick Chat</a>
-                            <button onclick="document.getElementById('negotiate-modal').classList.remove('hidden')" class="flex-1 bg-white/10 text-white border border-white/20 py-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] flex items-center justify-center">Negotiate</button>
-                        {% else %}
-                            <a href="{% url 'edit_product' product.id %}" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] text-center shadow-xl flex items-center justify-center">Manage Ad</a>
-                        {% endif %}
-                    </div>
-                    {% if user != product.seller %}
-                        {% if not phone_request %}
-                            <a href="{% url 'request_phone' product.id %}" class="flex items-center justify-center gap-3 py-4 bg-white/5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition-all font-black text-[9px] uppercase tracking-[0.2em] border border-white/10">
-                                <i data-lucide="phone-call" class="w-4 h-4 text-indigo-400"></i>
-                                <span>** *** **** <span class="text-indigo-400 underline ml-1">Request Contact</span></span>
-                            </a>
-                        {% elif phone_request.status == 'approved' %}
-                            <a href="tel:{{ product.seller.userprofile.phone_number }}" class="flex items-center justify-center gap-3 py-4 bg-indigo-600 rounded-xl text-white font-black text-[9px] uppercase tracking-[0.2em] shadow-xl shadow-indigo-600/20">
-                                <i data-lucide="phone" class="w-4 h-4"></i>
-                                <span>{{ product.seller.userprofile.phone_number }}</span>
-                            </a>
-                        {% else %}
-                            <div class="flex items-center justify-center gap-3 py-4 bg-white/5 rounded-xl text-slate-400 font-black text-[9px] uppercase tracking-[0.2em] border border-white/5 opacity-70">
-                                <i data-lucide="lock" class="w-4 h-4"></i>
-                                <span>Request {{ phone_request.status|title }}</span>
-                            </div>
+                            {% if not phone_request %}
+                                <a href="{% url 'request_phone' product.id %}" class="flex items-center justify-center gap-3 py-4 bg-white/5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition-all font-black text-[9px] uppercase tracking-[0.2em] border border-white/10">
+                                    <i data-lucide="phone-call" class="w-4 h-4 text-indigo-400"></i>
+                                    <span>** *** **** <span class="text-indigo-400 underline ml-1">Request Contact</span></span>
+                                </a>
+                            {% elif phone_request.status == 'approved' %}
+                                <a href="tel:{{ product.seller.userprofile.phone_number }}" class="flex items-center justify-center gap-3 py-4 bg-indigo-600 rounded-xl text-white font-black text-[9px] uppercase tracking-[0.2em] shadow-xl shadow-indigo-600/20">
+                                    <i data-lucide="phone" class="w-4 h-4"></i>
+                                    <span>{{ product.seller.userprofile.phone_number }}</span>
+                                </a>
+                            {% else %}
+                                <div class="flex items-center justify-center gap-3 py-4 bg-white/5 rounded-xl text-slate-400 font-black text-[9px] uppercase tracking-[0.2em] border border-white/5 opacity-70">
+                                    <i data-lucide="lock" class="w-4 h-4"></i>
+                                    <span>Request {{ phone_request.status|title }}</span>
+                                </div>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </div>
@@ -209,61 +216,68 @@
                 </div>
                 
                 <div class="flex flex-col gap-4">
-                    {% if user != product.seller %}
-                        {% if not user_chat_request %}
-                            <!-- No Request Yet -->
-                            <button onclick="document.getElementById('negotiate-modal').classList.remove('hidden')" class="w-full bg-white text-slate-950 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] hover:bg-indigo-500 hover:text-white transition-all shadow-2xl active:scale-95 group">
-                               <span>Negotiate Price</span>
-                            </button>
-                            <a href="{% url 'start_chat' product.id %}" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] text-center hover:bg-indigo-500 transition-all shadow-xl">Chat with Seller</a>
-                        {% elif user_chat_request.status == 'pending' %}
-                            <!-- Pending Negotiation -->
-                            <div class="w-full bg-white/10 border border-white/20 py-6 rounded-2xl text-center space-y-2">
-                                <p class="text-[9px] font-black text-indigo-400 uppercase tracking-[0.4em]">Offer Sent to Seller</p>
-                                <p class="text-2xl font-black italic tracking-tighter">₹{{ user_chat_request.negotiated_amount|default:product.price }}</p>
-                            </div>
-                            <div class="py-4 text-center">
-                                <span class="bg-indigo-500/20 text-indigo-300 text-[8px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full border border-indigo-500/30 animate-pulse">Waiting for Seller Approval</span>
-                            </div>
-                        {% elif user_chat_request.status == 'approved' %}
-                            <!-- Approved Negotiation -->
-                            <div class="w-full bg-emerald-500/20 border border-emerald-500/30 py-6 rounded-2xl text-center space-y-1">
-                                <p class="text-[9px] font-black text-emerald-400 uppercase tracking-[0.4em]">Price Finalised</p>
-                                <p class="text-2xl font-black italic tracking-tighter text-emerald-400">₹{{ user_chat_request.negotiated_amount }}</p>
-                            </div>
-                            <a href="{% url 'chat_detail' user_chat_request.id %}" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] text-center hover:bg-indigo-500 transition-all shadow-xl">Contact Seller now</a>
-                        {% elif user_chat_request.status == 'rejected' %}
-                            <!-- Rejected Negotiation -->
-                            <div class="w-full bg-rose-500/10 border border-rose-500/20 py-6 rounded-2xl text-center space-y-2 opacity-60">
-                                <p class="text-[9px] font-black text-rose-400 uppercase tracking-[0.4em]">Offer Declined</p>
-                                <p class="text-2xl font-black italic tracking-tighter text-rose-500">₹{{ user_chat_request.negotiated_amount }}</p>
-                            </div>
-                            <div class="py-4 text-center">
-                                <span class="text-[8px] font-black text-rose-400 uppercase tracking-[0.2em] italic">Offer rejected. Please wait 24h.</span>
-                            </div>
-                        {% endif %}
-                        
-                        <div class="w-full h-[1px] bg-white/10 my-2"></div>
-                        
-                        {% if not phone_request %}
-                            <a href="{% url 'request_phone' product.id %}" class="flex items-center justify-center gap-4 p-5 bg-white/5 rounded-2xl text-slate-300 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all font-black text-[10px] uppercase tracking-[0.3em] border border-white/5">
-                                <i data-lucide="phone-call" class="w-5 h-5 text-indigo-400"></i>
-                                <span>** *** **** <span class="text-indigo-400 underline ml-2">Request Contact</span></span>
-                            </a>
-                        {% elif phone_request.status == 'approved' %}
-                            <a href="tel:{{ product.seller.userprofile.phone_number }}" class="flex items-center justify-center gap-4 p-5 bg-indigo-600 rounded-2xl text-white font-black text-[10px] uppercase tracking-[0.4em] shadow-xl shadow-indigo-600/20">
-                                <i data-lucide="phone" class="w-5 h-5"></i>
-                                <span>{{ product.seller.userprofile.phone_number }}</span>
-                            </a>
-                        {% else %}
-                            <div class="flex items-center justify-center gap-4 p-5 bg-white/5 rounded-2xl text-slate-400 font-black text-[10px] uppercase tracking-[0.4em] border border-white/5 opacity-70">
-                                <i data-lucide="lock" class="w-5 h-5"></i>
-                                <span>Request {{ phone_request.status|title }}</span>
-                            </div>
-                        {% endif %}
+                    {% if product.is_sold %}
+                         <div class="w-full bg-rose-500/10 py-6 rounded-2xl text-center space-y-2 border border-rose-500/20">
+                              <p class="text-[12px] font-black text-rose-500 uppercase tracking-[0.4em]">Sold Out</p>
+                              <p class="text-xs text-rose-400 font-bold">This item has been sold and is no longer available.</p>
+                         </div>
                     {% else %}
-                        <a href="{% url 'edit_product' product.id %}" class="w-full bg-white text-slate-950 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] text-center hover:bg-indigo-500 hover:text-white transition-all shadow-2xl block">Edit Ad</a>
-                        <p class="text-[9px] text-center font-black text-slate-500 uppercase tracking-[0.4em]">Seller Dashboard Active</p>
+                        {% if user != product.seller %}
+                            {% if not user_chat_request %}
+                                <!-- No Request Yet -->
+                                <button onclick="document.getElementById('negotiate-modal').classList.remove('hidden')" class="w-full bg-white text-slate-950 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] hover:bg-indigo-500 hover:text-white transition-all shadow-2xl active:scale-95 group">
+                                   <span>Negotiate Price</span>
+                                </button>
+                                <a href="{% url 'start_chat' product.id %}" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] text-center hover:bg-indigo-500 transition-all shadow-xl">Chat with Seller</a>
+                            {% elif user_chat_request.status == 'pending' %}
+                                <!-- Pending Negotiation -->
+                                <div class="w-full bg-white/10 border border-white/20 py-6 rounded-2xl text-center space-y-2">
+                                    <p class="text-[9px] font-black text-indigo-400 uppercase tracking-[0.4em]">Offer Sent to Seller</p>
+                                    <p class="text-2xl font-black italic tracking-tighter">₹{{ user_chat_request.negotiated_amount|default:product.price }}</p>
+                                </div>
+                                <div class="py-4 text-center">
+                                    <span class="bg-indigo-500/20 text-indigo-300 text-[8px] font-black uppercase tracking-[0.3em] px-4 py-2 rounded-full border border-indigo-500/30 animate-pulse">Waiting for Seller Approval</span>
+                                </div>
+                            {% elif user_chat_request.status == 'approved' %}
+                                <!-- Approved Negotiation -->
+                                <div class="w-full bg-emerald-500/20 border border-emerald-500/30 py-6 rounded-2xl text-center space-y-1">
+                                    <p class="text-[9px] font-black text-emerald-400 uppercase tracking-[0.4em]">Price Finalised</p>
+                                    <p class="text-2xl font-black italic tracking-tighter text-emerald-400">₹{{ user_chat_request.negotiated_amount }}</p>
+                                </div>
+                                <a href="{% url 'chat_detail' user_chat_request.id %}" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] text-center hover:bg-indigo-500 transition-all shadow-xl">Contact Seller now</a>
+                            {% elif user_chat_request.status == 'rejected' %}
+                                <!-- Rejected Negotiation -->
+                                <div class="w-full bg-rose-500/10 border border-rose-500/20 py-6 rounded-2xl text-center space-y-2 opacity-60">
+                                    <p class="text-[9px] font-black text-rose-400 uppercase tracking-[0.4em]">Offer Declined</p>
+                                    <p class="text-2xl font-black italic tracking-tighter text-rose-500">₹{{ user_chat_request.negotiated_amount }}</p>
+                                </div>
+                                <div class="py-4 text-center">
+                                    <span class="text-[8px] font-black text-rose-400 uppercase tracking-[0.2em] italic">Offer rejected. Please wait 24h.</span>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="w-full h-[1px] bg-white/10 my-2"></div>
+                            
+                            {% if not phone_request %}
+                                <a href="{% url 'request_phone' product.id %}" class="flex items-center justify-center gap-4 p-5 bg-white/5 rounded-2xl text-slate-300 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all font-black text-[10px] uppercase tracking-[0.3em] border border-white/5">
+                                    <i data-lucide="phone-call" class="w-5 h-5 text-indigo-400"></i>
+                                    <span>** *** **** <span class="text-indigo-400 underline ml-2">Request Contact</span></span>
+                                </a>
+                            {% elif phone_request.status == 'approved' %}
+                                <a href="tel:{{ product.seller.userprofile.phone_number }}" class="flex items-center justify-center gap-4 p-5 bg-indigo-600 rounded-2xl text-white font-black text-[10px] uppercase tracking-[0.4em] shadow-xl shadow-indigo-600/20">
+                                    <i data-lucide="phone" class="w-5 h-5"></i>
+                                    <span>{{ product.seller.userprofile.phone_number }}</span>
+                                </a>
+                            {% else %}
+                                <div class="flex items-center justify-center gap-4 p-5 bg-white/5 rounded-2xl text-slate-400 font-black text-[10px] uppercase tracking-[0.4em] border border-white/5 opacity-70">
+                                    <i data-lucide="lock" class="w-5 h-5"></i>
+                                    <span>Request {{ phone_request.status|title }}</span>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <a href="{% url 'edit_product' product.id %}" class="w-full bg-white text-slate-950 py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] text-center hover:bg-indigo-500 hover:text-white transition-all shadow-2xl block">Edit Ad</a>
+                            <p class="text-[9px] text-center font-black text-slate-500 uppercase tracking-[0.4em]">Seller Dashboard Active</p>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
